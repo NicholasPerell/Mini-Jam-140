@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Sprite[] normalSprites;
 
+    [SerializeField] 
+    CoinGrid CoinMarker;
+
     LevelData currentLevelData;
 
     bool isPlayerTurn = false;
@@ -21,6 +24,10 @@ public class PlayerController : MonoBehaviour
     public Transform movePoint;
     public GameObject objectToSpawnvert;
     public GameObject objectToSpawnhorz;
+    public GameObject objectToMark;
+    public int coinCount = 0;
+    public int x = 0;
+    public int y = 0;
 
     public void SetFacing(DirectionFacing facing)
     {
@@ -30,12 +37,15 @@ public class PlayerController : MonoBehaviour
     public void BeginTurn(LevelData levelData)
     {
         currentLevelData = levelData;
+        coinCount = currentLevelData.coinsAtStart;
         isPlayerTurn = true;
     }
 
     void Start()
     {
         movePoint.parent = null;
+        x = 0;
+        y = 0;
         Array.Sort(currentLevelData.walls);
         int searchIndex = Array.BinarySearch(currentLevelData.walls, movePoint.position);
         if (searchIndex > -1)
@@ -48,10 +58,11 @@ public class PlayerController : MonoBehaviour
     {
         if (isPlayerTurn == true)
         {
-            transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
 
             if (whatStopsMovement == false)
             {
+                transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
+
                 if (Vector3.Distance(transform.position, movePoint.position) <= .05)
                 {
 
@@ -62,12 +73,14 @@ public class PlayerController : MonoBehaviour
                             if (Input.GetKey(KeyCode.D))
                             {
                                 movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-                                Instantiate(objectToSpawnhorz, transform.position, objectToSpawnhorz.transform.rotation);
+                                x = 1;
+                                y = 0;
                             }
                             if (Input.GetKey(KeyCode.A))
                             {
                                 movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-                                Instantiate(objectToSpawnhorz, transform.position, objectToSpawnhorz.transform.rotation);
+                                x = -1;
+                                y = 0;
                             }
                         }
                     }
@@ -79,14 +92,39 @@ public class PlayerController : MonoBehaviour
                             if (Input.GetKey(KeyCode.W))
                             {
                                 movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
-                                Instantiate(objectToSpawnvert, transform.position, objectToSpawnvert.transform.rotation);
+                                y = 1;
+                                x = 0;
                             }
                             if (Input.GetKey(KeyCode.S))
                             {
                                 movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
-                                Instantiate(objectToSpawnvert, transform.position, objectToSpawnvert.transform.rotation);
+                                y = -1;
+                                x = 0;
                             }
                         }
+                    }
+                }
+            }
+
+            if (coinCount > 0)
+            {
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    if (x == 1)
+                    {
+                        CoinMarker.CreateGrid(currentLevelData); 
+                    }
+                    else if (x == -1)
+                    {
+                        CoinMarker.CreateGrid(currentLevelData);
+                    }
+                    else if (y == 1)
+                    {
+                        CoinMarker.CreateGrid(currentLevelData);
+                    }
+                    else if (y == -1)
+                    {
+                        CoinMarker.CreateGrid(currentLevelData);
                     }
                 }
             }
