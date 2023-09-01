@@ -46,44 +46,46 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
-        transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
-
-        if (whatStopsMovement == false)
+        if (isPlayerTurn == true)
         {
-            if (Vector3.Distance(transform.position, movePoint.position) <= .05)
-            {
+            transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
 
-                if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
+            if (whatStopsMovement == false)
+            {
+                if (Vector3.Distance(transform.position, movePoint.position) <= .05)
                 {
-                    if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f), .35f))
+
+                    if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
                     {
-                        if (Input.GetKey(KeyCode.D))
+                        if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f), .35f))
                         {
-                            movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-                            Instantiate(objectToSpawnhorz, transform.position, objectToSpawnhorz.transform.rotation);
-                        }
-                        if (Input.GetKey(KeyCode.A))
-                        {
-                            movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-                            Instantiate(objectToSpawnhorz, transform.position, objectToSpawnhorz.transform.rotation);
+                            if (Input.GetKey(KeyCode.D))
+                            {
+                                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                                Instantiate(objectToSpawnhorz, transform.position, objectToSpawnhorz.transform.rotation);
+                            }
+                            if (Input.GetKey(KeyCode.A))
+                            {
+                                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
+                                Instantiate(objectToSpawnhorz, transform.position, objectToSpawnhorz.transform.rotation);
+                            }
                         }
                     }
-                }
-                if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
-                {
-                    if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f), .35f))
+                    if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
                     {
+                        if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f), .35f))
+                        {
 
-                        if (Input.GetKey(KeyCode.W))
-                        {
-                            movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
-                            Instantiate(objectToSpawnvert, transform.position, objectToSpawnvert.transform.rotation);
-                        }
-                        if (Input.GetKey(KeyCode.S))
-                        {
-                            movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
-                            Instantiate(objectToSpawnvert, transform.position, objectToSpawnvert.transform.rotation);
+                            if (Input.GetKey(KeyCode.W))
+                            {
+                                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                                Instantiate(objectToSpawnvert, transform.position, objectToSpawnvert.transform.rotation);
+                            }
+                            if (Input.GetKey(KeyCode.S))
+                            {
+                                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
+                                Instantiate(objectToSpawnvert, transform.position, objectToSpawnvert.transform.rotation);
+                            }
                         }
                     }
                 }
