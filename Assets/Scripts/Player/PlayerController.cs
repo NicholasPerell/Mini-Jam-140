@@ -32,6 +32,11 @@ public class PlayerController : MonoBehaviour
         isPlayerTurn = true;
     }
 
+    void Start()
+    {
+        movePoint.parent = null;
+    }
+
     void Update()
     {
 
