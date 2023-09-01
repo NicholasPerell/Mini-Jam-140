@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class RookController : EnemyController
 {
-    // Start is called before the first frame update
-    void Start()
+    protected override Vector2Int[] GetAttackVisionTiles(Vector2Int enemy, Vector2Int[] walls)
     {
-        
+        enemy.
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override Vector2Int[] GetPeripheralVisionTiles(Vector2Int enemy, Vector2Int[] walls)
     {
-        
+        throw new System.NotImplementedException();
     }
 }

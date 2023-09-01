@@ -71,6 +71,25 @@ public class TurnManager : MonoBehaviour
         {
             GameObject.Instantiate(pillarPrefab, ConvertToWorldPos(pillar) + (Vector3.one - tilemap.tileAnchor), Quaternion.identity);
         }
+
+        PreformPlayerTurn();
+    }
+
+    private void PreformPlayerTurn()
+    {
+        player.BeginTurn(currentLevelData);
+        player.OnTurnComplete += RespondToPlayerTurnComplete;
+    }
+
+    private void RespondToPlayerTurnComplete()
+    {
+        player.OnTurnComplete -= RespondToPlayerTurnComplete;
+        EnemyTurn();
+    }
+
+    private void EnemyTurn()
+    {
+
     }
 
     private Vector3 ConvertToWorldPos(Vector2Int cellPosition)

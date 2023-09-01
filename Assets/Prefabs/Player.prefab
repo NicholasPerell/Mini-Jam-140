@@ -129,3 +129,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f9dd2490ee14e44b8882ad6dc93a3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visuals: {fileID: 8616601342057361531}
+  normalSprites:
+  - {fileID: 564860883, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
+  - {fileID: 219161675, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
+  - {fileID: -144399151, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
+  - {fileID: -145598450, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
