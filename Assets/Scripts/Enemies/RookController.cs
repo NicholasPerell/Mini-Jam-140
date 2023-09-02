@@ -81,7 +81,6 @@ public class RookController : EnemyController
         bool alignedHorizontally = enemy.x == position.x;
         bool alignedVertically = enemy.y == position.y;
 
-        Vector2Int towards = TurnFacingToVector(facing);
         if(!facingCorrectly)
         {
             if(facingAdjacent)
@@ -89,26 +88,24 @@ public class RookController : EnemyController
                 if(facingLeftward)
                 {
                     facing = (DirectionFacing)(((int)facing + 1) % 4);
-                    towards = TurnLeftToVector(facing);
                 }
                 else
                 {
                     facing = (DirectionFacing)(((int)facing + 3) % 4);
-                    towards = TurnRightToVector(facing);
                 }
             }
             else
             {
                     facing = (DirectionFacing)(((int)facing + 2) % 4);
-                    towards = TurnBehindToVector(facing);
             }
         }
+        Vector2Int towards = TurnFacingToVector(facing);
 
         for (int i = 0; i < 30; i++)
         {
             if (Array.BinarySearch(walls, path + towards, new PositionComparer()) > -1
-                || (enemy.x == position.x && !alignedHorizontally) 
-                || (enemy.y == position.y && !alignedVertically))
+                || (path.x == position.x && !alignedHorizontally) 
+                || (path.y == position.y && !alignedVertically))
             {
                 break;
             }

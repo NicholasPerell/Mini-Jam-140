@@ -7,8 +7,10 @@ using System.Text;
 public abstract class EnemyController : TurnEntityController
 {
     private int index;
+    [SerializeField]
     private Vector2Int runningTowards = -Vector2Int.one;
     private bool moving => runningTowards != -Vector2Int.one;
+    [SerializeField]
     private bool seenPlayer = false;
 
     public void Initialize(Tilemap _tilemap, int _index)
@@ -28,11 +30,11 @@ public abstract class EnemyController : TurnEntityController
 
         Debug.Log("Enemy Begin Turn");
 
-
         LevelData.EnemyData enemyData = levelData.enemies[index];
         if (CheckTargetInAttack(enemyData.position, enemyData.directionFacing, levelData.playerPosition, levelData.walls)) //Attacking Player
         {
             Debug.Log("CheckTargetInAttackTrue");
+            seenPlayer = true;
             AttackPlayer(enemyData.position, enemyData.directionFacing, levelData.playerPosition, levelData.walls);
         }
         else if (seenPlayer) //Chasing Player
