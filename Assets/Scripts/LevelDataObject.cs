@@ -19,6 +19,13 @@ public enum DirectionFacing
     DOWN
 }
 
+public enum EnemyAction
+{
+    QUESTION,
+    CHARGE,
+    ATTACK
+}
+
 [System.Serializable]
 public struct LevelData
 {
@@ -28,6 +35,7 @@ public struct LevelData
         public EnemyType type;
         public Vector2Int position;
         public DirectionFacing directionFacing;
+        public EnemyAction enemyAction;
     }
 
     public Vector2Int[] walls;
@@ -42,7 +50,7 @@ public struct LevelData
     {
         LevelData data = new LevelData();
         data.walls = new Vector2Int[walls.Length];
-        for(int i = 0; i < walls.Length; i++)
+        for (int i = 0; i < walls.Length; i++)
         {
             data.walls[i] = walls[i];
         }
