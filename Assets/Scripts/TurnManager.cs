@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,8 +22,10 @@ public class TurnManager : MonoBehaviour
     [SerializeField]
     GameObject pillarPrefab;
 
+    [SerializeField]
     LevelData currentLevelData;
     List<EnemyController> enemies;
+    int enemyIndex;
 
     public event UnityAction<LevelData> OnInitializeLevel;
 
@@ -34,7 +37,7 @@ public class TurnManager : MonoBehaviour
 
     private void StartLevel(LevelDataObject levelDataObject)
     {
-        StartLevel(levelDataObject.Data);
+        StartLevel(levelDataObject.Data.Copy());
     }
 
     private void StartLevel(LevelData levelData)
@@ -63,6 +66,7 @@ public class TurnManager : MonoBehaviour
 
             instantiated = GameObject.Instantiate(prefab, ConvertToWorldPos(enemyData.position), Quaternion.identity);
             enemyController = instantiated.GetComponent<EnemyController>();
+            enemyController.Initialize(tilemap, enemies.Count);
             enemyController.SetFacing(enemyData.directionFacing);
             enemies.Add(enemyController);
         }
@@ -72,24 +76,79 @@ public class TurnManager : MonoBehaviour
             GameObject.Instantiate(pillarPrefab, ConvertToWorldPos(pillar) + (Vector3.one - tilemap.tileAnchor), Quaternion.identity);
         }
 
-        PreformPlayerTurn();
+        PerformPlayerTurn();
     }
 
-    private void PreformPlayerTurn()
+    private void PerformPlayerTurn()
     {
         player.BeginTurn(currentLevelData);
+        player.OnStealthKillEnemy += RespondToPlayerStealthKillEnemy;
         player.OnTurnComplete += RespondToPlayerTurnComplete;
     }
 
-    private void RespondToPlayerTurnComplete()
+    private void RespondToPlayerStealthKillEnemy(int arrayIndex)
     {
-        player.OnTurnComplete -= RespondToPlayerTurnComplete;
-        EnemyTurn();
+        for(int i = 0; i < enemies.Count; i++)
+        {
+            if(enemies[i].GetIndex() == arrayIndex)
+            {
+                currentLevelData.enemies[arrayIndex].position = -Vector2Int.one;
+                enemies[i].Die();
+                enemies.RemoveAt(i);
+                break;
+            }
+        }
     }
 
-    private void EnemyTurn()
+    private void RespondToPlayerTurnComplete(Vector2Int position, DirectionFacing facing)
     {
+        currentLevelData.playerPosition = position;
+        currentLevelData.playerDirectionFacing = facing;
+        player.OnTurnComplete -= RespondToPlayerTurnComplete;
+        PerformEnemyTurns();
+    }
 
+    private void PerformEnemyTurns()
+    {
+        enemyIndex = 0;
+        CheckForEnemyTurn();
+    }
+
+    private void CheckForEnemyTurn()
+    {
+        if(enemyIndex < enemies.Count)
+        {
+            enemies[enemyIndex].OnTurnComplete += RespondToEnemyTurnComplete;
+            enemies[enemyIndex].BeginTurn(currentLevelData);
+        }
+        else if(enemyIndex == 0)
+        {
+            //Enemies all slain! Next Level!
+        }
+        else
+        {
+            PerformPlayerTurn();
+        }
+    }
+
+    private void RespondToEnemyTurnComplete(Vector2Int position, DirectionFacing facing)
+    {
+        Debug.Log("RespondToEnemyTurnComplete");
+        enemies[enemyIndex].OnTurnComplete -= RespondToEnemyTurnComplete;
+        int arrayIndex = enemies[enemyIndex].GetIndex();
+        currentLevelData.enemies[arrayIndex].position = position;
+        currentLevelData.enemies[arrayIndex].directionFacing = facing;
+
+        if(position.x < 0 && position.y < 0) //Enemy slain
+        {
+            enemies.RemoveAt(enemyIndex);
+        }
+        else
+        {
+            enemyIndex++;
+        }
+
+        CheckForEnemyTurn();
     }
 
     private Vector3 ConvertToWorldPos(Vector2Int cellPosition)

@@ -36,6 +36,37 @@ public struct LevelData
     public int coinsAtStart;
     public Vector2Int[] pillars;
     public EnemyData[] enemies;
+    public Vector2Int[] coinPath;
+
+    public LevelData Copy()
+    {
+        LevelData data = new LevelData();
+        data.walls = new Vector2Int[walls.Length];
+        for(int i = 0; i < walls.Length; i++)
+        {
+            data.walls[i] = walls[i];
+        }
+        data.playerPosition = playerPosition;
+        data.playerDirectionFacing = playerDirectionFacing;
+        data.coinsAtStart = coinsAtStart;
+        data.pillars = new Vector2Int[pillars.Length];
+        for (int i = 0; i < pillars.Length; i++)
+        {
+            data.pillars[i] = pillars[i];
+        }
+        data.enemies = new EnemyData[enemies.Length];
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            data.enemies[i] = enemies[i];
+        }
+        data.coinPath = new Vector2Int[coinPath.Length];
+        for (int i = 0; i < coinPath.Length; i++)
+        {
+            data.coinPath[i] = coinPath[i];
+        }
+
+        return data;
+    }
 }
 
 [CreateAssetMenu(fileName = "NewLevelData.asset", menuName = "Level Data")]

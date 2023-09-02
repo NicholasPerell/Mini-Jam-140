@@ -20,17 +20,6 @@ public class GridDrawer : MonoBehaviour
     [Range(.5f, 1f)]
     float checkerFloorTint = .5f;
 
-    [Space]
-    [SerializeField]
-    Transform player;
-    [SerializeField]
-    Transform playerSprite;
-    [SerializeField]
-    [Min(float.Epsilon)]
-    float playerMoveDuration = .5f;
-    [SerializeField]
-    float playerJumpPower = .5f;
-
     void OnEnable()
     {
         turnManager.OnInitializeLevel += RespondToInitializeLevel;
@@ -43,8 +32,6 @@ public class GridDrawer : MonoBehaviour
 
     private void RespondToInitializeLevel(LevelData levelData)
     {
-        Debug.Log("RespondToInitializeLevel");
-
         tilemap.ClearAllTiles();
 
         foreach(Vector2Int cellPosition in levelData.walls)
@@ -53,7 +40,7 @@ public class GridDrawer : MonoBehaviour
             tilemap.SetTile(new Vector3Int(cellPosition.x,cellPosition.y), wallTiles[index]);
         }
 
-        tilemap.FloodFill(new Vector3Int(levelData.playerPosition.x, levelData.playerPosition.x), floorTiles[0]);
+        tilemap.FloodFill(new Vector3Int(levelData.playerPosition.x, levelData.playerPosition.y), floorTiles[0]);
         CheckerFloorTiles();
     }
 
@@ -80,12 +67,5 @@ public class GridDrawer : MonoBehaviour
                 }
             }
         }
-    }
-
-    void MovePlayerTo(Vector2Int cellPosition)
-    {
-        Vector3 worldPosition = tilemap.transform.position + tilemap.tileAnchor + new Vector3(cellPosition.x * tilemap.cellSize.x, cellPosition.y * tilemap.cellSize.y, 0);
-        player.DOMove(worldPosition, playerMoveDuration);
-        playerSprite.DOLocalJump(Vector3.zero, playerJumpPower, 1, playerMoveDuration);
     }
 }
