@@ -1264,6 +1264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnManager: {fileID: 1814233138}
+  player: {fileID: 764650124}
   tilemap: {fileID: 1722695086}
   floorTiles:
   - {fileID: 11400000, guid: fb9a3151c72a7b14bbc15c5a3cde9b73, type: 2}
@@ -1276,6 +1277,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 21858e890127e4844bbb148267274ece, type: 2}
   - {fileID: 11400000, guid: 11621978d03b4fd48baf5f73766c41ab, type: 2}
   - {fileID: 11400000, guid: 3e8d1316dd4250e44856a44d90b35e5d, type: 2}
+  coinTile: {fileID: 11400000, guid: e8877efbdac93844485972d40d4d3d74, type: 2}
+  pillarTile: {fileID: 11400000, guid: c09faae47a6777c4f80550da455384f8, type: 2}
+  enemyTile: {fileID: 11400000, guid: 1e4f799e95b77bb4ba739a2b66a8d254, type: 2}
+  selectionTile: {fileID: 11400000, guid: da52de210eae42241a17618ab5d228d4, type: 2}
   checkerFloorTint: 0.75
 --- !u!4 &1310810372
 Transform:

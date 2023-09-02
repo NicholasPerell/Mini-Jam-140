@@ -10,8 +10,10 @@ using DG.Tweening;
 public abstract class EnemyController : TurnEntityController
 {
     private int index;
+    [SerializeField]
     private Vector2Int runningTowards = -Vector2Int.one;
     private bool moving => runningTowards != -Vector2Int.one;
+    [SerializeField]
     bool seenPlayer = false;
     [SerializeField]
     AlertActions chargeIcon;
@@ -43,8 +45,13 @@ public abstract class EnemyController : TurnEntityController
         base.BeginTurn(levelData);
 
         Debug.Log("Enemy Begin Turn");
-
         LevelData.EnemyData enemyData = levelData.enemies[index];
+        
+        if(enemyData.position == runningTowards)
+        {
+            runningTowards = -Vector2Int.one;
+        }
+
         if (CheckTargetInAttack(enemyData.position, enemyData.directionFacing, levelData.playerPosition, levelData.walls)) //Attacking Player
         {
             Debug.Log("CheckTargetInAttackTrue");
@@ -71,9 +78,10 @@ public abstract class EnemyController : TurnEntityController
         else if (CheckTargetsInAttack(enemyData.position, enemyData.directionFacing, levelData.coinPath, levelData.walls)
                 || CheckTargetsInPeripheral(enemyData.position, enemyData.directionFacing, levelData.coinPath, levelData.walls)) //Coin Path Intersects With Vision Line
         {
-            runningTowards = levelData.coinPath[0];
+            //runningTowards = levelData.coinPath[0];
+            Debug.LogError("ReactingTowardsCoinPath");
             chargeIcon.EnableQuestionIcon(true);
-            ReactTowardPosition(enemyData.position, enemyData.directionFacing, runningTowards, levelData.walls);
+            ReactTowardPosition(enemyData.position, enemyData.directionFacing, levelData.coinPath[0], levelData.walls);
         }
         else if (IsFacingWall(enemyData.position, enemyData.directionFacing, levelData.walls)) //Facing Wall
         {
@@ -119,6 +127,11 @@ public abstract class EnemyController : TurnEntityController
     public bool CheckTargetsInPeripheral(Vector2Int enemy, DirectionFacing facing, Vector2Int[] targets, Vector2Int[] walls) => CheckTargetsInTiles(enemy, facing, targets, walls, GetPeripheralVisionTiles);
     public bool CheckTargetsInTiles(Vector2Int enemy, DirectionFacing facing, Vector2Int[] targets, Vector2Int[] walls, GatherTiles gather)
     {
+        if(targets == null)
+        {
+            return false;
+        }
+
         Vector2Int[] tiles = GetAttackVisionTiles(enemy, facing, walls);
         Array.Sort(tiles, new PositionComparer());
         foreach (Vector2Int target in targets)

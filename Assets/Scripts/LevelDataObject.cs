@@ -46,9 +46,9 @@ public struct LevelData
     public EnemyData[] enemies;
 
     //In-Game Data (not for start of level)
-    [HideInInspector]
+    //[HideInInspector]
     public Vector2Int[] coinPath;
-    [HideInInspector]
+    //[HideInInspector]
     public List<int> pillarsWrapped; //Consider making this an array too
 
     public LevelData Copy()

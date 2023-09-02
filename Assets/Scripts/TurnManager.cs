@@ -125,9 +125,23 @@ public class TurnManager : MonoBehaviour
 
     private void PerformPlayerTurn()
     {
+        currentLevelData.coinPath = null;
         player.BeginTurn(currentLevelData);
+        player.OnCoinsUpdated += Player_OnCoinsUpdated;
+        player.OnScarfUpdated += Player_OnScarfUpdated;
         player.OnStealthKillEnemy += RespondToPlayerStealthKillEnemy;
         player.OnTurnComplete += RespondToPlayerTurnComplete;
+    }
+
+    private void Player_OnScarfUpdated(List<int> arg0)
+    {
+        currentLevelData.pillarsWrapped = arg0;
+    }
+
+    private void Player_OnCoinsUpdated(Vector2Int[] arg0)
+    {
+        currentLevelData.coinPath = arg0;
+        currentLevelData.coins--;
     }
 
     private void RespondToPlayerStealthKillEnemy(int arrayIndex, UnityAction callback)
@@ -147,19 +161,15 @@ public class TurnManager : MonoBehaviour
                 break;
             }
         }
-
-        void Func()
-        {
-            enemies[i].OnDeathComplete -= Func;
-            enemies.RemoveAt(i);
-            callback();
-        }
     }
 
     private void RespondToPlayerTurnComplete(Vector2Int position, DirectionFacing facing)
     {
         currentLevelData.playerPosition = position;
         currentLevelData.playerDirectionFacing = facing;
+        player.OnCoinsUpdated -= Player_OnCoinsUpdated;
+        player.OnScarfUpdated -= Player_OnScarfUpdated;
+        player.OnStealthKillEnemy -= RespondToPlayerStealthKillEnemy;
         player.OnTurnComplete -= RespondToPlayerTurnComplete;
         PerformEnemyTurns();
     }
