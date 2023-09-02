@@ -203,13 +203,13 @@ public class PlayerController : TurnEntityController
 
     void MovePlayerTo(Vector2Int cellPosition)
     {
-        Debug.Log("MovePlayeTo: " + cellPosition);
 
         finishingPosition = cellPosition;
         Vector3 worldPosition = tilemap.transform.position + tilemap.tileAnchor + new Vector3(cellPosition.x * tilemap.cellSize.x, cellPosition.y * tilemap.cellSize.y, 0);
+        Debug.Log("MovePlayerTo: " + cellPosition + " -> " + worldPosition);
         Sequence mySequence = DOTween.Sequence();
         mySequence.Append(transform.DOMove(worldPosition, playerMoveDuration));
-        //mySequence.Insert(0,visuals.transform.DOLocalJump(Vector3.zero, playerJumpPower, 1, playerMoveDuration));
+        mySequence.Insert(0,visuals.transform.DOLocalJump(Vector3.zero, playerJumpPower, 1, playerMoveDuration));
         mySequence.AppendCallback(RespondToPieceMoved);
     }
 
