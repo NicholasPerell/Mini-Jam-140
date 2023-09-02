@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 using System.Linq;
 using System;
@@ -7,13 +8,19 @@ using System.Text;
 public abstract class EnemyController : TurnEntityController
 {
     private int index;
-    [SerializeField]
     private Vector2Int runningTowards = -Vector2Int.one;
     private bool moving => runningTowards != -Vector2Int.one;
-    [SerializeField]
-    public bool seenPlayer = false;
+    bool seenPlayer = false;
     [SerializeField]
     AlertActions chargeIcon;
+
+    [SerializeField]
+    [Min(0.1f)]
+    [Tooltip("How many units moved per second")]
+    protected float movementSpeed = 1;
+
+    public event UnityAction OnAttackPlayer;
+
     public void Initialize(Tilemap _tilemap, int _index)
     {
         tilemap = _tilemap;
@@ -125,7 +132,12 @@ public abstract class EnemyController : TurnEntityController
         DeclareTurnOver(enemy, facing);
     }
 
-    public void Die()
+    protected void DeclarePlayerSlain()
+    {
+        OnAttackPlayer?.Invoke();
+    }
+
+    public override void Die()
     {
         Debug.Log(gameObject.name + " Dying");
         Destroy(gameObject);

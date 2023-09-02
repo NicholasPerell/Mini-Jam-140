@@ -233,15 +233,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visuals: {fileID: 8507859844480278855}
   normalSprites:
-  - {fileID: 564860883, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
-  - {fileID: 219161675, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
-  - {fileID: -144399151, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
-  - {fileID: -145598450, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
+  - {fileID: 2041825803, guid: cc56bc79738ae2b4e84efb0f8804d9db, type: 3}
+  - {fileID: 2007736923, guid: cc56bc79738ae2b4e84efb0f8804d9db, type: 3}
+  - {fileID: 2141066432, guid: cc56bc79738ae2b4e84efb0f8804d9db, type: 3}
+  - {fileID: -832398221, guid: cc56bc79738ae2b4e84efb0f8804d9db, type: 3}
   tilemap: {fileID: 0}
   isEntityTurn: 0
-  runningTowards: {x: -1, y: -1}
-  seenPlayer: 0
   chargeIcon: {fileID: 6062499100345170359}
+  movementSpeed: 5
 --- !u!1 &8507859844480278849
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,8 +314,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 668352122, guid: 10e48c363d9626e478a0120b61b83e09, type: 3}
-  m_Color: {r: 0.6698113, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 2007736923, guid: cc56bc79738ae2b4e84efb0f8804d9db, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

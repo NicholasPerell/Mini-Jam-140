@@ -89,4 +89,6 @@ public abstract class TurnEntityController : MonoBehaviour
         Vector3 worldPosition = tilemap.transform.position + tilemap.tileAnchor + new Vector3(cellPosition.x * tilemap.cellSize.x, cellPosition.y * tilemap.cellSize.y, 0);
         return worldPosition;
     }
+
+    public abstract void Die();
 }

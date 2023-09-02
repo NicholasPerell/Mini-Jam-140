@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 51581050749026700}
+  - component: {fileID: 447015188128680553}
   m_Layer: 0
   m_Name: Pillar
   m_TagString: Untagged
@@ -32,6 +33,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &447015188128680553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4115832215194210142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6db6c8089a19e3409569e65cf2cea8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visuals: {fileID: 932138607468906656}
+  normal: {fileID: 1297651219, guid: 7ee23efa3334a5c468d73d31b11904fb, type: 3}
+  wrapped: {fileID: -1333706894, guid: 7ee23efa3334a5c468d73d31b11904fb, type: 3}
 --- !u!1 &8367832269126720184
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,8 +120,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_SortingOrder: 6
+  m_Sprite: {fileID: 1297651219, guid: 7ee23efa3334a5c468d73d31b11904fb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

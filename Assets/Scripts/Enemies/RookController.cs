@@ -9,7 +9,7 @@ public class RookController : EnemyController
 {
     Vector2Int finishingPosition;
     DirectionFacing finishingFacing;
-
+    bool playerFound;
     protected override Vector2Int[] GetAttackVisionTiles(Vector2Int enemy, DirectionFacing facing, Vector2Int[] walls)
     {
         List<Vector2Int> tiles = new List<Vector2Int>();
@@ -101,9 +101,13 @@ public class RookController : EnemyController
         }
         Vector2Int towards = TurnFacingToVector(facing);
 
+        playerFound = false;
+
         for (int i = 0; i < 30; i++)
         {
-            if (Array.BinarySearch(walls, path + towards, new PositionComparer()) > -1
+            playerFound = path + towards == currentLevelData.playerPosition;
+            if (playerFound
+                || Array.BinarySearch(walls, path + towards, new PositionComparer()) > -1
                 || (path.x == position.x && !alignedHorizontally) 
                 || (path.y == position.y && !alignedVertically))
             {
@@ -119,7 +123,7 @@ public class RookController : EnemyController
         finishingPosition = path;
         finishingFacing = facing;
         Sequence mySequence = DOTween.Sequence();
-        mySequence.Append(transform.DOMove(ConvertToWorldPos(path), 1f));
+        mySequence.Append(transform.DOMove(ConvertToWorldPos(path),  (path - enemy).magnitude / movementSpeed));
         mySequence.AppendCallback(RespondToPieceMoved);
     }
 
@@ -130,7 +134,13 @@ public class RookController : EnemyController
 
     private void RespondToPieceMoved()
     {
-        DeclareTurnOver(finishingPosition, finishingFacing);
+        if (playerFound)
+        {
+            DeclarePlayerSlain();
+        }
+        else
+        {
+            DeclareTurnOver(finishingPosition, finishingFacing);
+        }
     }
-
 }

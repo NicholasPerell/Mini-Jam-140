@@ -41,10 +41,15 @@ public struct LevelData
     public Vector2Int[] walls;
     public Vector2Int playerPosition;
     public DirectionFacing playerDirectionFacing;
-    public int coinsAtStart;
+    public int coins;
     public Vector2Int[] pillars;
     public EnemyData[] enemies;
+
+    //In-Game Data (not for start of level)
+    [HideInInspector]
     public Vector2Int[] coinPath;
+    [HideInInspector]
+    public List<int> pillarsWrapped; //Consider making this an array too
 
     public LevelData Copy()
     {
@@ -56,7 +61,7 @@ public struct LevelData
         }
         data.playerPosition = playerPosition;
         data.playerDirectionFacing = playerDirectionFacing;
-        data.coinsAtStart = coinsAtStart;
+        data.coins = coins;
         data.pillars = new Vector2Int[pillars.Length];
         for (int i = 0; i < pillars.Length; i++)
         {
@@ -72,6 +77,8 @@ public struct LevelData
         {
             data.coinPath[i] = coinPath[i];
         }
+        data.pillarsWrapped = new List<int>();
+        data.pillarsWrapped.AddRange(pillarsWrapped); //Consider making this an array too
 
         return data;
     }

@@ -118,6 +118,7 @@ public class TurnManager : MonoBehaviour
     {
         if(enemyIndex < enemies.Count)
         {
+            enemies[enemyIndex].OnAttackPlayer += RespondToEnemyAttackPlayer;
             enemies[enemyIndex].OnTurnComplete += RespondToEnemyTurnComplete;
             enemies[enemyIndex].BeginTurn(currentLevelData);
         }
@@ -131,9 +132,15 @@ public class TurnManager : MonoBehaviour
         }
     }
 
+    private void RespondToEnemyAttackPlayer()
+    {
+        player.Die();
+    }
+
     private void RespondToEnemyTurnComplete(Vector2Int position, DirectionFacing facing)
     {
         Debug.Log("RespondToEnemyTurnComplete");
+        enemies[enemyIndex].OnAttackPlayer -= RespondToEnemyAttackPlayer;
         enemies[enemyIndex].OnTurnComplete -= RespondToEnemyTurnComplete;
         int arrayIndex = enemies[enemyIndex].GetIndex();
         currentLevelData.enemies[arrayIndex].position = position;

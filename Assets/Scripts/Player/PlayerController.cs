@@ -14,20 +14,14 @@ public class PlayerController : TurnEntityController
     float playerJumpPower = .5f;
     [SerializeField] 
     CoinGrid CoinMarker;
+    [SerializeField]
+    GameObject deathIndicatorChild;
 
-    public bool whatStopsMovement = false;
-    public float moveSpeed = 2f;
-    public Transform movePoint;
-    public GameObject objectToSpawnvert;
-    public GameObject objectToSpawnhorz;
-    public GameObject objectToMark;
-    public int coinCount = 0;
-    public int x = 0;
-    public int y = 0;
+    int coinCount = 0;
+    bool coinTossSelection = false;
 
     Vector2Int finishingPosition;
     DirectionFacing finishingFacing;
-    [SerializeField]
     bool isTakingInput = false;
 
     public event UnityAction<int> OnStealthKillEnemy;
@@ -36,116 +30,49 @@ public class PlayerController : TurnEntityController
     {
         base.BeginTurn(levelData);
         currentLevelData = levelData;
-        coinCount = currentLevelData.coinsAtStart;
+        coinCount = currentLevelData.coins;
         isTakingInput = true;
 
         Debug.Log("Player Begin Turn");
 
     }
 
-    /*void Start()
-    {
-        movePoint.parent = null;
-        x = 0;
-        y = 0;
-        Array.Sort(currentLevelData.walls);
-        int searchIndex = Array.BinarySearch(currentLevelData.walls, movePoint.position);
-        if (searchIndex > -1)
-        {
-            whatStopsMovement = true;
-        }
-    }*/
-
     void Update()
     {
         if (IsEntityTurn && isTakingInput)
         {
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.UP, currentLevelData.enemies, currentLevelData.walls);
-            }
-            else if (Input.GetKeyDown(KeyCode.S))
-            {
-                AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.DOWN, currentLevelData.enemies, currentLevelData.walls);
-            }
-            else if (Input.GetKeyDown(KeyCode.D))
-            {
-                AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.RIGHT, currentLevelData.enemies, currentLevelData.walls);
-            }
-            else if (Input.GetKeyDown(KeyCode.A))
-            {
-                AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.LEFT, currentLevelData.enemies, currentLevelData.walls);
-            }
-
-            /*if (whatStopsMovement == false && false)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
-
-                if (Vector3.Distance(transform.position, movePoint.position) <= .05)
-                {
-
-                    if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) == 1f)
-                    {
-                        if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f), .35f))
-                        {
-                            if (Input.GetKey(KeyCode.D))
-                            {
-                                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-                                x = 1;
-                                y = 0;
-                            }
-                            if (Input.GetKey(KeyCode.A))
-                            {
-                                movePoint.position += new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-                                x = -1;
-                                y = 0;
-                            }
-                        }
-                    }
-                    if (Mathf.Abs(Input.GetAxisRaw("Vertical")) == 1f)
-                    {
-                        if (!Physics2D.OverlapCircle(movePoint.position + new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f), .35f))
-                        {
-
-                            if (Input.GetKey(KeyCode.W))
-                            {
-                                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
-                                y = 1;
-                                x = 0;
-                            }
-                            if (Input.GetKey(KeyCode.S))
-                            {
-                                movePoint.position += new Vector3(0f, Input.GetAxisRaw("Vertical"), 0f);
-                                y = -1;
-                                x = 0;
-                            }
-                        }
-                    }
-                }
-            }*/
-
             if (coinCount > 0)
             {
                 if (Input.GetKeyDown(KeyCode.E))
-                {
-                    if (x == 1)
-                    {
-                        CoinMarker.CreateGrid(currentLevelData); 
-                    }
-                    else if (x == -1)
-                    {
-                        CoinMarker.CreateGrid(currentLevelData);
-                    }
-                    else if (y == 1)
-                    {
-                        CoinMarker.CreateGrid(currentLevelData);
-                    }
-                    else if (y == -1)
-                    {
-                        CoinMarker.CreateGrid(currentLevelData);
-                    }
+                { 
+                    CoinMarker.CreateGrid(currentLevelData);
                 }
             }
+
+            if(!coinTossSelection)
+            {
+                CheckForMovementInput();
+            }
+        }
+    }
+
+    void CheckForMovementInput()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.UP, currentLevelData.enemies, currentLevelData.walls);
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.DOWN, currentLevelData.enemies, currentLevelData.walls);
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.RIGHT, currentLevelData.enemies, currentLevelData.walls);
+        }
+        else if (Input.GetKeyDown(KeyCode.A))
+        {
+            AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.LEFT, currentLevelData.enemies, currentLevelData.walls);
         }
     }
 
@@ -216,5 +143,10 @@ public class PlayerController : TurnEntityController
     private void RespondToPieceMoved()
     {
         DeclareTurnOver(finishingPosition, finishingFacing);
+    }
+
+    public override void Die()
+    {
+        deathIndicatorChild.SetActive(true);
     }
 }
