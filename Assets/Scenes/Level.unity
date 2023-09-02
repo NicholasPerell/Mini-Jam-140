@@ -2399,6 +2399,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1562941666}
     - target: {fileID: 8616601342774192975, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}
+      propertyPath: playerJumpPower
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8616601342774192975, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}
       propertyPath: whatStopsMovement.m_Bits
       value: 4294967295
       objectReference: {fileID: 0}
