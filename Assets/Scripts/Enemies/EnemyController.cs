@@ -11,8 +11,9 @@ public abstract class EnemyController : TurnEntityController
     private Vector2Int runningTowards = -Vector2Int.one;
     private bool moving => runningTowards != -Vector2Int.one;
     [SerializeField]
-    private bool seenPlayer = false;
-
+    public bool seenPlayer = false;
+    [SerializeField]
+    AlertActions chargeIcon;
     public void Initialize(Tilemap _tilemap, int _index)
     {
         tilemap = _tilemap;
@@ -34,6 +35,7 @@ public abstract class EnemyController : TurnEntityController
         if (CheckTargetInAttack(enemyData.position, enemyData.directionFacing, levelData.playerPosition, levelData.walls)) //Attacking Player
         {
             Debug.Log("CheckTargetInAttackTrue");
+            chargeIcon.EnableAlertIcon(!seenPlayer);
             seenPlayer = true;
             AttackPlayer(enemyData.position, enemyData.directionFacing, levelData.playerPosition, levelData.walls);
         }
@@ -46,6 +48,7 @@ public abstract class EnemyController : TurnEntityController
         {
             runningTowards = levelData.playerPosition;
             seenPlayer = true;
+            chargeIcon.EnableAlertIcon(seenPlayer);
             ReactTowardPosition(enemyData.position, enemyData.directionFacing, runningTowards, levelData.walls);
         }
         else if(moving) //Moving towards thrown coin
@@ -56,6 +59,7 @@ public abstract class EnemyController : TurnEntityController
                 || CheckTargetsInPeripheral(enemyData.position, enemyData.directionFacing, levelData.coinPath, levelData.walls)) //Coin Path Intersects With Vision Line
         {
             runningTowards = levelData.coinPath[0];
+            chargeIcon.EnableQuestionIcon(true);
             ReactTowardPosition(enemyData.position, enemyData.directionFacing, runningTowards, levelData.walls);
         }
         else if (IsFacingWall(enemyData.position, enemyData.directionFacing, levelData.walls)) //Facing Wall
