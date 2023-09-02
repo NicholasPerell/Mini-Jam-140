@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &115194297 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8616601342057361530, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}
-  m_PrefabInstance: {fileID: 8616601342026582467}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &286913720
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,10 +893,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 11621978d03b4fd48baf5f73766c41ab, type: 2}
   - {fileID: 11400000, guid: 3e8d1316dd4250e44856a44d90b35e5d, type: 2}
   checkerFloorTint: 0.75
-  player: {fileID: 764650123}
-  playerSprite: {fileID: 115194297}
-  playerMoveDuration: 0.5
-  playerJumpPower: 0.5
 --- !u!4 &1310810372
 Transform:
   m_ObjectHideFlags: 0
@@ -2150,6 +2141,14 @@ MonoBehaviour:
   tilemap: {fileID: 1722695086}
   rookPrefab: {fileID: 8507859843769742429, guid: 07de3b91edb76f94c9465ca1098b7d8a, type: 3}
   pillarPrefab: {fileID: 4115832215194210142, guid: 4312c3af8fc22c448965a0e0e9c05573, type: 3}
+  currentLevelData:
+    walls: []
+    playerPosition: {x: 0, y: 0}
+    playerDirectionFacing: 0
+    coinsAtStart: 0
+    pillars: []
+    enemies: []
+    coinPath: []
 --- !u!4 &1814233139
 Transform:
   m_ObjectHideFlags: 0
@@ -2398,6 +2397,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8616601342774192975, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}
+      propertyPath: tilemap
+      value: 
+      objectReference: {fileID: 1722695086}
     - target: {fileID: 8616601342774192975, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}
       propertyPath: coinCount
       value: 1
