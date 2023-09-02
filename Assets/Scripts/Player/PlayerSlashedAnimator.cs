@@ -24,6 +24,9 @@ public class PlayerSlashedAnimator : MonoBehaviour
             AudioSystem.Instance?.RequestSound("Death01");
             yield return new WaitForSeconds(.5f);
             gameObject.SetActive(false);
+
+            //TODO: Trigger the hurt/slain animation once it exists
+            
         }
     }
 }

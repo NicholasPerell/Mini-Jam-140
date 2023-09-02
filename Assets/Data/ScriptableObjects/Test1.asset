@@ -42,7 +42,7 @@ MonoBehaviour:
     - {x: 6, y: 4}
     - {x: 6, y: 5}
     - {x: 6, y: 6}
-    playerPosition: {x: 1, y: 2}
+    playerPosition: {x: 1, y: 1}
     playerDirectionFacing: 2
     coins: 0
     pillars:

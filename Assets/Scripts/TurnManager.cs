@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Tilemaps;
+using DG.Tweening;
 
 public class TurnManager : MonoBehaviour
 {
     [SerializeField]
-    LevelDataObject currentLevelDataObject;
+    LevelDataObject[] levels;
     [SerializeField]
     PlayerController player;
     [SerializeField]
@@ -21,18 +22,50 @@ public class TurnManager : MonoBehaviour
     [Header("Environment Objects")]
     [SerializeField]
     GameObject pillarPrefab;
-
+    [Space]
+    [Header("UI Elements")]
+    [SerializeField]
+    RectTransform blackScreen;
+    [SerializeField]
+    [Min(0)]
+    float swipeScreenTime, coveringScreenTime;
+    [SerializeField]
+    GameObject gameOverPanel;
+    
     [SerializeField]
     LevelData currentLevelData;
+    int levelIndex;
     List<EnemyController> enemies;
     int enemyIndex;
+    List<PillarController> pillars;
 
     public event UnityAction<LevelData> OnInitializeLevel;
 
     private void Start()
     {
         enemies = new List<EnemyController>();
-        StartLevel(currentLevelDataObject);
+        pillars = new List<PillarController>();
+        blackScreen.gameObject.SetActive(true);
+        levelIndex = 0;
+        StartLevel(levels[levelIndex]);
+    }
+
+    public void RestartLevel()
+    {
+        StartLevel(levels[levelIndex]);
+    }
+
+    private void CheckForNextLevel()
+    {
+        levelIndex++;
+        if (levelIndex < levels.Length)
+        {
+            StartLevel(levels[levelIndex]);
+        }
+        else
+        {
+            HandleWin();
+        }
     }
 
     private void StartLevel(LevelDataObject levelDataObject)
@@ -42,6 +75,17 @@ public class TurnManager : MonoBehaviour
 
     private void StartLevel(LevelData levelData)
     {
+        for(int i = 0; i < enemies.Count;i++)
+        {
+            Destroy(enemies[i].gameObject);
+        }
+        enemies.Clear();
+        for (int i = 0; i < pillars.Count; i++)
+        {
+            Destroy(pillars[i].gameObject);
+        }
+        pillars.Clear();
+
         currentLevelData = levelData;
 
         OnInitializeLevel?.Invoke(currentLevelData);
@@ -73,10 +117,10 @@ public class TurnManager : MonoBehaviour
 
         foreach (Vector2Int pillar in currentLevelData.pillars)
         {
-            GameObject.Instantiate(pillarPrefab, ConvertToWorldPos(pillar) + (Vector3.one - tilemap.tileAnchor), Quaternion.identity);
+            pillars.Add(GameObject.Instantiate(pillarPrefab, ConvertToWorldPos(pillar) + (Vector3.one - tilemap.tileAnchor), Quaternion.identity).GetComponent<PillarController>());
         }
 
-        PerformPlayerTurn();
+        UncoverScreen(PerformPlayerTurn);
     }
 
     private void PerformPlayerTurn()
@@ -86,17 +130,29 @@ public class TurnManager : MonoBehaviour
         player.OnTurnComplete += RespondToPlayerTurnComplete;
     }
 
-    private void RespondToPlayerStealthKillEnemy(int arrayIndex)
+    private void RespondToPlayerStealthKillEnemy(int arrayIndex, UnityAction callback)
     {
-        for(int i = 0; i < enemies.Count; i++)
+        int i = 0;
+        for(i = 0; i < enemies.Count; i++)
         {
             if(enemies[i].GetIndex() == arrayIndex)
             {
                 currentLevelData.enemies[arrayIndex].position = -Vector2Int.one;
-                enemies[i].Die();
+                enemies[i].OnDeathComplete += () =>
+                {
+                    callback();
+                };
+                enemies[i].RequestDie();
                 enemies.RemoveAt(i);
                 break;
             }
+        }
+
+        void Func()
+        {
+            enemies[i].OnDeathComplete -= Func;
+            enemies.RemoveAt(i);
+            callback();
         }
     }
 
@@ -125,6 +181,7 @@ public class TurnManager : MonoBehaviour
         else if(enemyIndex == 0)
         {
             //Enemies all slain! Next Level!
+            CoverScreen(CheckForNextLevel);
         }
         else
         {
@@ -134,7 +191,15 @@ public class TurnManager : MonoBehaviour
 
     private void RespondToEnemyAttackPlayer()
     {
-        player.Die();
+        player.OnDeathComplete += RespondToPlayerDeathComplete;
+        player.RequestDie();
+    }
+
+    private void RespondToPlayerDeathComplete()
+    {
+        Debug.Log("RespondToPlayerDeathComplete");
+        player.OnDeathComplete -= RespondToPlayerDeathComplete;
+        CoverScreen(() => { gameOverPanel.SetActive(true); });
     }
 
     private void RespondToEnemyTurnComplete(Vector2Int position, DirectionFacing facing)
@@ -158,9 +223,30 @@ public class TurnManager : MonoBehaviour
         CheckForEnemyTurn();
     }
 
+    private void HandleWin()
+    {
+        Debug.Log("WIN");
+    }
+
     private Vector3 ConvertToWorldPos(Vector2Int cellPosition)
     {
         Vector3 worldPosition = tilemap.transform.position + tilemap.tileAnchor + new Vector3(cellPosition.x * tilemap.cellSize.x, cellPosition.y * tilemap.cellSize.y, 0);
         return worldPosition;
+    }
+
+    private void UncoverScreen(TweenCallback callback = null)
+    {
+        blackScreen.pivot = new Vector2(1, 0.5f);
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(blackScreen.DOScaleX(0, swipeScreenTime));
+        sequence.AppendCallback(callback);
+    }
+
+    private void CoverScreen(TweenCallback callback = null)
+    {
+        blackScreen.pivot = new Vector2(0, 0.5f);
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(blackScreen.DOScaleX(1, swipeScreenTime));
+        sequence.AppendCallback(callback);
     }
 }

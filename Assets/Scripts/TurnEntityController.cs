@@ -27,13 +27,13 @@ public abstract class TurnEntityController : MonoBehaviour
     protected Tilemap tilemap;
 
     protected LevelData currentLevelData;
-    [SerializeField]
     private bool isEntityTurn = false;
     protected bool IsEntityTurn
     {
         get { return isEntityTurn; }
     }
     public event UnityAction<Vector2Int,DirectionFacing> OnTurnComplete;
+    public event UnityAction OnDeathComplete;
 
     public virtual void BeginTurn(LevelData levelData)
     {
@@ -90,5 +90,10 @@ public abstract class TurnEntityController : MonoBehaviour
         return worldPosition;
     }
 
-    public abstract void Die();
+    public abstract void RequestDie();
+
+    protected void DeclareDeathComplete()
+    {
+        OnDeathComplete?.Invoke();
+    }
 }

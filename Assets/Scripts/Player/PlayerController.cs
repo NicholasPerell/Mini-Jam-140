@@ -24,7 +24,7 @@ public class PlayerController : TurnEntityController
     DirectionFacing finishingFacing;
     bool isTakingInput = false;
 
-    public event UnityAction<int> OnStealthKillEnemy;
+    public event UnityAction<int, UnityAction> OnStealthKillEnemy;
 
     public override void BeginTurn(LevelData levelData)
     {
@@ -122,15 +122,13 @@ public class PlayerController : TurnEntityController
 
     void StealthKill(Vector2Int player, DirectionFacing facing, int enemyArrayIndex)
     {
-        //TODO set up kill/push animation!
-
-        OnStealthKillEnemy.Invoke(enemyArrayIndex);
-        MovePlayerTo(player);
+        AudioSystem.Instance?.RequestSound("ScarfWhipAttack01");
+        OnStealthKillEnemy.Invoke(enemyArrayIndex, RespondToPieceMoved);
+        //MovePlayerTo(player);
     }
 
     void MovePlayerTo(Vector2Int cellPosition)
     {
-
         finishingPosition = cellPosition;
         Vector3 worldPosition = tilemap.transform.position + tilemap.tileAnchor + new Vector3(cellPosition.x * tilemap.cellSize.x, cellPosition.y * tilemap.cellSize.y, 0);
         Debug.Log("MovePlayerTo: " + cellPosition + " -> " + worldPosition);
@@ -145,8 +143,22 @@ public class PlayerController : TurnEntityController
         DeclareTurnOver(finishingPosition, finishingFacing);
     }
 
-    public override void Die()
+    public override void RequestDie()
     {
-        deathIndicatorChild.SetActive(true);
+        StartCoroutine(Coroutine());
+        IEnumerator Coroutine()
+        {
+            deathIndicatorChild.SetActive(true);
+            Animator anim = deathIndicatorChild.GetComponent<Animator>();
+            AudioSystem.Instance?.RequestSound("EnemyAttack01");
+            yield return new WaitForSeconds(.05f);
+            anim.Play("slashPlaying");
+            yield return new WaitForSeconds(.25f);
+            AudioSystem.Instance?.RequestSound("Death01");
+            //TODO: Trigger the hurt/slain animation once it exists
+            yield return new WaitForSeconds(.5f);
+            deathIndicatorChild.SetActive(false);
+            DeclareDeathComplete();
+        }
     }
 }

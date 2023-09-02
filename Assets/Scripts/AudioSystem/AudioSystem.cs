@@ -20,7 +20,7 @@ public class AudioSystem : MonoBehaviour
         } 
     }
     SortedDictionary<string, AudioClip> audioResources;
-    SortedSet<AudioClip> sfxPlaying;
+    List<AudioClip> sfxPlaying;
 
     private void Awake()
     {
@@ -32,7 +32,7 @@ public class AudioSystem : MonoBehaviour
         {
             instance = this;
             audioResources = new SortedDictionary<string, AudioClip>();
-            sfxPlaying = new SortedSet<AudioClip>();
+            sfxPlaying = new List<AudioClip>();
             for(int i = 0; i < resources.Length; i++)
             {
                 audioResources.Add(resources[i].name, resources[i]);
@@ -66,7 +66,13 @@ public class AudioSystem : MonoBehaviour
         AudioClip clip;
         if(audioResources.TryGetValue(name,out clip) && !sfxPlaying.Contains(clip))
         {
+            Debug.Log("Audio System: " + name + " RequestSound.");
+
             StartCoroutine(ExpressSoundLifetime(clip));
+        }
+        else if(audioResources.TryGetValue(name, out clip))
+        {
+            Debug.LogError("Audio System: " + name + " has no matching string.");
         }
     }
 
@@ -80,5 +86,21 @@ public class AudioSystem : MonoBehaviour
         yield return new WaitForSeconds(length);
         Destroy(sfxChild.gameObject);
         sfxPlaying.Remove(clip);
+    }
+
+    public void Pause()
+    {
+        foreach(AudioSource audio in GetComponentsInChildren<AudioSource>())
+        {
+            audio.Pause();
+        }
+    }
+
+    public void Resume()
+    {
+        foreach (AudioSource audio in GetComponentsInChildren<AudioSource>())
+        {
+            audio.UnPause();
+        }
     }
 }

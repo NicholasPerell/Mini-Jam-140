@@ -4,6 +4,8 @@ using UnityEngine.Tilemaps;
 using System.Linq;
 using System;
 using System.Text;
+using System.Collections;
+using DG.Tweening;
 
 public abstract class EnemyController : TurnEntityController
 {
@@ -13,6 +15,10 @@ public abstract class EnemyController : TurnEntityController
     bool seenPlayer = false;
     [SerializeField]
     AlertActions chargeIcon;
+    [SerializeField]
+    protected ParticleSystem walkingParticles;
+    [SerializeField]
+    GameObject shatterPrefab;
 
     [SerializeField]
     [Min(0.1f)]
@@ -137,10 +143,30 @@ public abstract class EnemyController : TurnEntityController
         OnAttackPlayer?.Invoke();
     }
 
-    public override void Die()
+    public override void RequestDie()
     {
-        Debug.Log(gameObject.name + " Dying");
-        Destroy(gameObject);
+        StartCoroutine(Coroutine());
+        IEnumerator Coroutine()
+        {
+            float startRotationAmount = 30;
+            float fullRotationAmount = 450;
+            if(currentLevelData.enemies[index].directionFacing < DirectionFacing.LEFT)
+            {
+                startRotationAmount *= -1;
+                fullRotationAmount *= -1;
+            }
+            visuals.transform.DOLocalRotate(Vector3.forward * startRotationAmount, .5f, RotateMode.FastBeyond360);
+            yield return new WaitForSeconds(.5f);
+            visuals.transform.DOLocalJump(Vector3.down * 0.14f, .25f, 1, .6f);
+            visuals.transform.DOLocalRotate(Vector3.forward * fullRotationAmount, .6f, RotateMode.FastBeyond360);
+            AudioSystem.Instance?.RequestSound("EnemyFall01");
+            yield return new WaitForSeconds(.5f);
+            GameObject.Instantiate(shatterPrefab, visuals.transform.position, Quaternion.identity);
+            AudioSystem.Instance?.RequestSound("EnemyShatter01");
+            yield return new WaitForSeconds(.3f);
+            DeclareDeathComplete();
+            Destroy(gameObject);
+        }
     }
 
     protected abstract Vector2Int[] GetAttackVisionTiles(Vector2Int enemy, DirectionFacing facing, Vector2Int[] walls);

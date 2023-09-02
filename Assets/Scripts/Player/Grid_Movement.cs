@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Grid_Movement : MonoBehaviour
 {
-    private float speed = 5;
+    //private float speed = 5;
 
     private bool isMoving;
 

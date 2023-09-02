@@ -21,7 +21,6 @@ public class RookController : EnemyController
         for(int i = 0; i < 30; i++)
         {
             path += forward;
-            Debug.Log(path);
             if(Array.BinarySearch(walls,path, new PositionComparer()) > -1)
             {
                 break;
@@ -122,6 +121,7 @@ public class RookController : EnemyController
 
         finishingPosition = path;
         finishingFacing = facing;
+        walkingParticles.Play();
         Sequence mySequence = DOTween.Sequence();
         mySequence.Append(transform.DOMove(ConvertToWorldPos(path),  (path - enemy).magnitude / movementSpeed));
         mySequence.AppendCallback(RespondToPieceMoved);
@@ -134,6 +134,8 @@ public class RookController : EnemyController
 
     private void RespondToPieceMoved()
     {
+        walkingParticles.Stop();
+
         if (playerFound)
         {
             DeclarePlayerSlain();
