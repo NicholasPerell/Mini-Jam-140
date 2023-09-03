@@ -9,7 +9,8 @@ public enum EnemyType
     KNIGHT,
     PAWN,
     QUEEN,
-    BISHOP
+    BISHOP,
+    PJ
 }
 
 public enum DirectionFacing
@@ -147,6 +148,12 @@ public class LevelDataObject : ScriptableObject
     private bool Match(Color32 a, Color32 b)
     {
         return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+    }
+
+    public void Load(LevelData _levelData)
+    {
+        data = _levelData.Copy();
+        UnityEditor.EditorUtility.SetDirty(this);
     }
 #endif
 }

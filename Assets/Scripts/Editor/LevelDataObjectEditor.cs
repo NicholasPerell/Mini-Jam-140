@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(LevelDataObject))]
+[CustomEditor(typeof(LevelBuildTool))]
 public class LevelDataObjectEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        if(GUILayout.Button("Load Image To Data"))
+        if(GUILayout.Button("Load To Data"))
         {
-            ((LevelDataObject)target).LoadFromImage();
+            ((LevelBuildTool)target).Save();
         }
     }
 }
