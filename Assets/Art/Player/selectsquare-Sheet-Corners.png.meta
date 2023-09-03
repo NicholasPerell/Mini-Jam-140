@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 7ee23efa3334a5c468d73d31b11904fb
+guid: 0cce58e470553bd41aa53c95ed0fee57
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -117,85 +117,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Pillar_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 16
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f8b4f31400fd19c4db2b3de710b81621
-      internalID: 1297651219
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Pillar_1
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 16
-        width: 32
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2adf4bf0b0dc8c14880cb5fa30afc4a3
-      internalID: -1333706894
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Pillar_2
+      name: selectsquare-Sheet-Corners_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 32
-        height: 16
-      alignment: 0
+        height: 32
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bdfc039b59d2e7b4eb214024ff086ee3
-      internalID: -348321293
+      spriteID: 9a29a6cd963172c4eabf8e34ff1a3d99
+      internalID: 1923304325
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pillar_3
+      name: selectsquare-Sheet-Corners_1
       rect:
         serializedVersion: 2
         x: 32
         y: 0
         width: 32
-        height: 16
-      alignment: 0
+        height: 32
+      alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b70ff1d4f536bdd4eb495a12ec6b04a4
-      internalID: -1343676792
+      spriteID: e53f5dfa1af42334784d33670d52b936
+      internalID: 997652188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: selectsquare-Sheet-Corners_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 51746d90b31ec6f4581cfdac56a854e1
+      internalID: -506544610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: selectsquare-Sheet-Corners_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 32
+        height: 32
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b70ba2f74c556143940c833b9722c70
+      internalID: -951951077
       vertices: []
       indices: 
       edges: []
@@ -203,7 +203,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 8e266279faff98e448cb3fcd018da416
+    spriteID: 91b86bce9d78b0f4fb62f8a580965185
     internalID: 0
     vertices: []
     indices: 
@@ -211,10 +211,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Pillar_0: 1297651219
-      Pillar_1: -1333706894
-      Pillar_2: -348321293
-      Pillar_3: -1343676792
+      selectsquare-Sheet-Corners_0: 1923304325
+      selectsquare-Sheet-Corners_1: 997652188
+      selectsquare-Sheet-Corners_2: -506544610
+      selectsquare-Sheet-Corners_3: -951951077
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

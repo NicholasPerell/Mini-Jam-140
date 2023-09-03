@@ -5,9 +5,11 @@ using UnityEngine;
 public class PillarController : MonoBehaviour
 {
     [SerializeField]
-    SpriteRenderer visuals;
+    SpriteRenderer visualsTop,visualsBottom;
     [SerializeField]
-    Sprite normal, wrapped;
+    Sprite normalTop, wrappedTop;
+    [SerializeField]
+    Sprite normalBottom, wrappedBottom;
 
     private void OnEnable()
     {
@@ -16,6 +18,7 @@ public class PillarController : MonoBehaviour
 
     public void SetWrapped(bool isWrapped)
     {
-        visuals.sprite = isWrapped ? wrapped : normal;
+        visualsTop.sprite = isWrapped ? wrappedTop : normalTop;
+        visualsBottom.sprite = isWrapped ? wrappedBottom : normalBottom;
     }
 }

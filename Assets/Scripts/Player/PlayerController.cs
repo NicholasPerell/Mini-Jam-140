@@ -40,7 +40,7 @@ public class PlayerController : TurnEntityController
     public event UnityAction<Vector2Int[], UnityAction<Vector2Int>> OnCoinsConsidered;
     public event UnityAction<Vector2Int[]> OnCoinsUpdated;
     public event UnityAction OnCoinsDismissed;
-    public event UnityAction<Vector2Int[], List<int>, UnityAction<Vector2Int>> OnScarfConsidered;
+    public event UnityAction<Vector2Int[], UnityAction<Vector2Int>> OnScarfConsidered;
     public event UnityAction<List<int>> OnScarfUpdated;
     public event UnityAction OnScarfDismissed;
 
@@ -153,7 +153,7 @@ public class PlayerController : TurnEntityController
                 OnCoinsConsidered?.Invoke(FindCoinTossableSpaces(), ThrowCoin);
                 break;
             case PlayerInputState.SCARF:
-                OnScarfConsidered?.Invoke(currentLevelData.pillars, currentLevelData.pillarsWrapped, TieScarf);
+                OnScarfConsidered?.Invoke(FindInReachPillars(), TieScarf);
                 break;
         }
     }
@@ -177,6 +177,27 @@ public class PlayerController : TurnEntityController
     void TieScarf(Vector2Int position)
     {
         List<int> pillarsWrapped = currentLevelData.pillarsWrapped;
+        int choosenPillarIndex;
+        for(choosenPillarIndex = 0; choosenPillarIndex < currentLevelData.pillars.Length; choosenPillarIndex++)
+        {
+            if(currentLevelData.pillars[choosenPillarIndex] == position)
+            {
+                break;
+            }
+        }
+
+        int indexInWrapped = pillarsWrapped.LastIndexOf(choosenPillarIndex);
+        bool alreadyWrapped = indexInWrapped > -1;
+
+        if(!alreadyWrapped)
+        {
+            pillarsWrapped.Add(choosenPillarIndex);
+        }
+        else if(indexInWrapped == pillarsWrapped.Count -1)
+        {
+            pillarsWrapped.RemoveAt(indexInWrapped);
+        }
+
         OnScarfUpdated?.Invoke(pillarsWrapped);
         OnScarfDismissed?.Invoke();
         DeclareTurnOver(currentLevelData.playerPosition, currentLevelData.playerDirectionFacing);
@@ -212,6 +233,26 @@ public class PlayerController : TurnEntityController
 
         tossablePositions.Sort(positionComparer);
         return tossablePositions.ToArray();
+    }
+
+    Vector2Int[] FindInReachPillars()
+    {
+        List<Vector2Int> localPillars = new List<Vector2Int>();
+        Vector2Int playerPosition = currentLevelData.playerPosition;
+        Vector2Int[] toCheck = new Vector2Int[] { playerPosition, playerPosition + Vector2Int.left,
+                                                    playerPosition + Vector2Int.down, playerPosition - Vector2Int.one};
+        for (int i = 0; i < currentLevelData.pillars.Length; i++)
+        {
+            for (int j = 0; j < toCheck.Length; j++)
+            {
+                if(currentLevelData.pillars[i] == toCheck[j])
+                {
+                    localPillars.Add(toCheck[j]);
+                }
+            }
+        }
+
+        return localPillars.ToArray();
     }
 
     bool AttemptMoveOne(Vector2Int player, DirectionFacing facing, LevelData.EnemyData[] enemies, Vector2Int[] walls)
@@ -261,7 +302,6 @@ public class PlayerController : TurnEntityController
     {
         AudioSystem.Instance?.RequestSound("ScarfWhipAttack01");
         OnStealthKillEnemy.Invoke(enemyArrayIndex, RespondToPieceMoved);
-        //MovePlayerTo(player);
     }
 
     void MovePlayerTo(Vector2Int cellPosition)

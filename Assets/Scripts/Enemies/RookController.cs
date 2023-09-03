@@ -10,18 +10,20 @@ public class RookController : EnemyController
     Vector2Int finishingPosition;
     DirectionFacing finishingFacing;
     bool playerFound;
-    protected override Vector2Int[] GetAttackVisionTiles(Vector2Int enemy, DirectionFacing facing, Vector2Int[] walls)
+    bool tripsOverScarf;
+    protected override Vector2Int[] GetAttackVisionTiles(Vector2Int enemy, DirectionFacing facing, Vector2Int[] walls, Vector2Int[] otherEnemies)
     {
         List<Vector2Int> tiles = new List<Vector2Int>();
 
-        Array.Sort(walls, new PositionComparer());
+        //Array.Sort(walls, new PositionComparer());
 
         Vector2Int path = enemy;
         Vector2Int forward = TurnFacingToVector(facing);
         for(int i = 0; i < 30; i++)
         {
             path += forward;
-            if(Array.BinarySearch(walls,path, new PositionComparer()) > -1)
+            if(Array.BinarySearch(walls, path, new PositionComparer()) > -1
+                || Array.BinarySearch(otherEnemies, path, new PositionComparer()) > -1)
             {
                 break;
             }
@@ -31,7 +33,7 @@ public class RookController : EnemyController
         return tiles.ToArray();
     }
 
-    protected override Vector2Int[] GetPeripheralVisionTiles(Vector2Int enemy, DirectionFacing facing, Vector2Int[] walls)
+    protected override Vector2Int[] GetPeripheralVisionTiles(Vector2Int enemy, DirectionFacing facing, Vector2Int[] walls, Vector2Int[] otherEnemies)
     {
         Vector2Int forward = TurnFacingToVector(facing);
         Vector2Int right = TurnRightToVector(facing);
@@ -49,17 +51,25 @@ public class RookController : EnemyController
                 tiles.RemoveAt(searchIndex);
             }
         }
+        foreach (Vector2Int otherEnemy in otherEnemies)
+        {
+            searchIndex = tiles.BinarySearch(otherEnemy, new PositionComparer());
+            if (searchIndex > -1)
+            {
+                tiles.RemoveAt(searchIndex);
+            }
+        }
 
         return tiles.ToArray();
     }
 
-    protected override void ReactTowardPosition(Vector2Int enemy, DirectionFacing facing, Vector2Int position, Vector2Int[] walls)
+    protected override void ReactTowardPosition(Vector2Int enemy, DirectionFacing facing, Vector2Int position, Vector2Int[] walls, Vector2Int[] otherEnemies, Vector2Int[] pillars, int[] pillarIndex, Vector2Int player)
     {
         Vector2Int diff = position - enemy;
         bool moveDistance = Vector2Int.FloorToInt(((Vector2)diff).normalized) == TurnFacingToVector(facing);
         if(moveDistance)
         {
-            MoveTowardPosition(enemy, facing, position, walls);
+            MoveTowardPosition(enemy, facing, position, walls, otherEnemies, pillars, pillarIndex, player);
         }
         else
         {
@@ -69,7 +79,7 @@ public class RookController : EnemyController
             DeclareTurnOver(enemy, facing);
         }
     }
-    protected override void MoveTowardPosition(Vector2Int enemy, DirectionFacing facing, Vector2Int position, Vector2Int[] walls)
+    protected override void MoveTowardPosition(Vector2Int enemy, DirectionFacing facing, Vector2Int position, Vector2Int[] walls, Vector2Int[] otherEnemies, Vector2Int[] pillars, int[] pillarIndex, Vector2Int player)
     {
         Vector2Int path = enemy;
         Vector2Int diff = position - enemy;
@@ -100,12 +110,16 @@ public class RookController : EnemyController
         }
         Vector2Int towards = TurnFacingToVector(facing);
 
+        tripsOverScarf = false;
         playerFound = false;
 
         for (int i = 0; i < 30; i++)
         {
+            tripsOverScarf = CrossesScarf(path, path + towards, pillars, pillarIndex, player);
             playerFound = path + towards == currentLevelData.playerPosition;
+
             if (playerFound
+                || Array.BinarySearch(otherEnemies, path + towards, new PositionComparer()) > -1
                 || Array.BinarySearch(walls, path + towards, new PositionComparer()) > -1
                 || (path.x == position.x && !alignedHorizontally) 
                 || (path.y == position.y && !alignedVertically))
@@ -117,26 +131,35 @@ public class RookController : EnemyController
 
         SetFacing(facing);
 
-        //TODO: Check for scarf in the way
-
         finishingPosition = path;
         finishingFacing = facing;
         walkingParticles.Play();
+        Vector3 pathToWorld = ConvertToWorldPos(path);
+        if(tripsOverScarf)
+        {
+            pathToWorld = Vector3.Lerp(pathToWorld, ConvertToWorldPos(path + towards), .5f);
+        }
         Sequence mySequence = DOTween.Sequence();
-        mySequence.Append(transform.DOMove(ConvertToWorldPos(path),  (path - enemy).magnitude / movementSpeed));
+        mySequence.Append(transform.DOMove(pathToWorld,  (path - enemy).magnitude / movementSpeed));
         mySequence.AppendCallback(RespondToPieceMoved);
     }
 
-    protected override void AttackPlayer(Vector2Int enemy, DirectionFacing facing, Vector2Int player, Vector2Int[] walls)
+
+    protected override void AttackPlayer(Vector2Int enemy, DirectionFacing facing, Vector2Int player, Vector2Int[] walls, Vector2Int[] otherEnemies, Vector2Int[] pillars, int[] pillarIndex)
     {
-        MoveTowardPosition(enemy, facing, player, walls);
+        MoveTowardPosition(enemy, facing, player, walls, otherEnemies, pillars, pillarIndex, player);
     }
 
     private void RespondToPieceMoved()
     {
         walkingParticles.Stop();
-
-        if (playerFound)
+        if(tripsOverScarf)
+        {
+            finishingPosition = -Vector2Int.one;
+            OnDeathComplete += RespondToTrippingDeathPreformed;
+            RequestDie();
+        }
+        else if (playerFound)
         {
             DeclarePlayerSlain();
         }
@@ -144,5 +167,11 @@ public class RookController : EnemyController
         {
             DeclareTurnOver(finishingPosition, finishingFacing);
         }
+    }
+
+    private void RespondToTrippingDeathPreformed()
+    {
+        OnDeathComplete -= RespondToTrippingDeathPreformed;
+        DeclareTurnOver(finishingPosition, finishingFacing);
     }
 }

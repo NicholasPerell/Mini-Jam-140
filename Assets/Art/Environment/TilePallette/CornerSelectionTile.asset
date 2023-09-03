@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
-  m_Name: SelectionTile
+  m_Name: CornerSelectionTile
   m_EditorClassIdentifier: 
   m_AnimatedSprites:
-  - {fileID: 2110970519, guid: bd71d11c4c414a74d8c20c919360e3c1, type: 3}
-  - {fileID: -604380507, guid: bd71d11c4c414a74d8c20c919360e3c1, type: 3}
-  - {fileID: -1045256470, guid: bd71d11c4c414a74d8c20c919360e3c1, type: 3}
-  - {fileID: 771797000, guid: bd71d11c4c414a74d8c20c919360e3c1, type: 3}
+  - {fileID: 1923304325, guid: 0cce58e470553bd41aa53c95ed0fee57, type: 3}
+  - {fileID: 997652188, guid: 0cce58e470553bd41aa53c95ed0fee57, type: 3}
+  - {fileID: -506544610, guid: 0cce58e470553bd41aa53c95ed0fee57, type: 3}
+  - {fileID: -951951077, guid: 0cce58e470553bd41aa53c95ed0fee57, type: 3}
   m_MinSpeed: 4
   m_MaxSpeed: 4
   m_AnimationStartTime: 0

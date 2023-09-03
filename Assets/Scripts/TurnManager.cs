@@ -136,6 +136,10 @@ public class TurnManager : MonoBehaviour
     private void Player_OnScarfUpdated(List<int> arg0)
     {
         currentLevelData.pillarsWrapped = arg0;
+        for(int i = 0; i < currentLevelData.pillars.Length; i++)
+        {
+            pillars[i].SetWrapped(currentLevelData.pillarsWrapped.Contains(i));
+        }
     }
 
     private void Player_OnCoinsUpdated(Vector2Int[] arg0)
@@ -197,6 +201,11 @@ public class TurnManager : MonoBehaviour
         {
             PerformPlayerTurn();
         }
+    }
+
+    private void RespondToEnemyTurnResultDeath()
+    {
+        throw new NotImplementedException();
     }
 
     private void RespondToEnemyAttackPlayer()

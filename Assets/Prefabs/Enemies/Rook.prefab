@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 4ff8c813de0444e4caf372ada4e6622f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5109,6 +5109,8 @@ MonoBehaviour:
   - {fileID: 2141066432, guid: cc56bc79738ae2b4e84efb0f8804d9db, type: 3}
   - {fileID: -832398221, guid: cc56bc79738ae2b4e84efb0f8804d9db, type: 3}
   tilemap: {fileID: 0}
+  runningTowards: {x: -1, y: -1}
+  seenPlayer: 0
   chargeIcon: {fileID: 6062499100345170359}
   walkingParticles: {fileID: 7537331597418182785}
   shatterPrefab: {fileID: 732990266004633719, guid: 0d5255c121e11ae4dae91f651fd1e492, type: 3}
@@ -5269,7 +5271,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: e144528bcdad01848b80f4623a13a753, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
