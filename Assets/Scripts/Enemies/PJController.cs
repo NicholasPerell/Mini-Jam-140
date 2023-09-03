@@ -45,4 +45,11 @@ public class PJController : EnemyController
         }
         DeclareTurnOver(levelData.enemies[GetIndex()].position, levelData.enemies[GetIndex()].directionFacing);
     }
+
+    public override void RequestDie()
+    {
+        Sequence sequence = DOTween.Sequence();
+        //sequence.Append()
+        DeclareDeathComplete();
+    }
 }

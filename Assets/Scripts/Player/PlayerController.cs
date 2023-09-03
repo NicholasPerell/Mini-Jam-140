@@ -20,7 +20,7 @@ public class PlayerController : TurnEntityController
     [SerializeField]
     float playerJumpPower = .5f;
     [SerializeField]
-    GameObject deathIndicatorChild;
+    Animator deathIndicatorChild;
     [SerializeField]
     GameObject coinChild;
     [SerializeField]
@@ -34,7 +34,10 @@ public class PlayerController : TurnEntityController
 
     Vector2Int finishingPosition;
     DirectionFacing finishingFacing;
-    
+
+    [SerializeField]
+    Animator anim;
+
     public event UnityAction<int, UnityAction> OnStealthKillEnemy;
     public event UnityAction<Vector2Int[], UnityAction<Vector2Int>> OnCoinsConsidered;
     public event UnityAction<Vector2Int[]> OnCoinsUpdated;
@@ -52,6 +55,7 @@ public class PlayerController : TurnEntityController
         inputState = PlayerInputState.MOVEMENT;
         Array.Sort(currentLevelData.walls, new PositionComparer());
         coinChild.SetActive(false);
+        coinChild.transform.rotation = Quaternion.identity;
         coinChild.transform.localPosition = Vector3.zero;
 
         Debug.Log("Player Begin Turn");
@@ -161,6 +165,8 @@ public class PlayerController : TurnEntityController
 
     void ThrowCoin(Vector2Int position)
     {
+        isTakingInput = false;
+
         List<Vector2Int> coinPath = new List<Vector2Int>();
 
         Vector2Int backwards = TurnBehindToVector(currentLevelData.playerDirectionFacing);
@@ -172,11 +178,36 @@ public class PlayerController : TurnEntityController
 
         OnCoinsUpdated?.Invoke(coinPath.ToArray());
         OnCoinsDismissed?.Invoke();
-        DeclareTurnOver(currentLevelData.playerPosition, currentLevelData.playerDirectionFacing);
+
+        StartCoroutine(Coroutine());
+        IEnumerator Coroutine()
+        {
+            AudioSystem.Instance?.RequestSound("CoinThrow01");
+            anim.SetTrigger("Throw");
+            
+            coinChild.SetActive(true);
+            yield return new WaitForSeconds(.1f);
+            Vector3 worldPosition = tilemap.transform.position + tilemap.tileAnchor + new Vector3(position.x * tilemap.cellSize.x, position.y * tilemap.cellSize.y, 0);
+            Sequence coinThrown = DOTween.Sequence();
+            coinThrown.Append(coinChild.transform.DOJump(worldPosition, 0.5f, 1, .75f));
+            coinThrown.Insert(0, coinChild.transform.DORotate(Vector3.forward * 810, .75f, RotateMode.FastBeyond360));
+            coinThrown.Append(coinChild.transform.DOJump(worldPosition - (new Vector3(backwards.x,backwards.y) * .25f),0.25f, 1, .6f));
+            coinThrown.Play();
+            yield return new WaitForSeconds(.75f);
+            AudioSystem.Instance?.RequestSound("CoinLanding01");
+            yield return new WaitForSeconds(.75f);
+            coinChild.SetActive(false);
+            coinChild.transform.rotation = Quaternion.identity;
+            coinChild.transform.localPosition = Vector3.zero;
+
+            DeclareTurnOver(currentLevelData.playerPosition, currentLevelData.playerDirectionFacing);
+        }
     }
 
     void TieScarf(Vector2Int position)
     {
+        isTakingInput = false;
+
         List<int> pillarsWrapped = currentLevelData.pillarsWrapped;
         int choosenPillarIndex;
         for(choosenPillarIndex = 0; choosenPillarIndex < currentLevelData.pillars.Length; choosenPillarIndex++)
@@ -326,17 +357,29 @@ public class PlayerController : TurnEntityController
         StartCoroutine(Coroutine());
         IEnumerator Coroutine()
         {
-            deathIndicatorChild.SetActive(true);
-            Animator anim = deathIndicatorChild.GetComponent<Animator>();
+            deathIndicatorChild.gameObject.SetActive(true);
             AudioSystem.Instance?.RequestSound("EnemyAttack01");
             yield return new WaitForSeconds(.05f);
-            anim.Play("slashPlaying");
+            deathIndicatorChild.Play("slashPlaying");
             yield return new WaitForSeconds(.25f);
             AudioSystem.Instance?.RequestSound("Death01");
-            //TODO: Trigger the hurt/slain animation once it exists
-            yield return new WaitForSeconds(.5f);
-            deathIndicatorChild.SetActive(false);
+            yield return new WaitForSeconds(.25f);
+            anim.SetTrigger("Slain");
+            yield return new WaitForSeconds(.25f);
+            deathIndicatorChild.gameObject.SetActive(false);
             DeclareDeathComplete();
         }
+    }
+
+    public override void SetFacing(DirectionFacing facing)
+    {
+        Vector2Int towards = TurnFacingToVector(facing);
+        anim.SetFloat("FacingX",towards.x);
+        anim.SetFloat("FacingY",towards.y);
+    }
+
+    public void SetPJs()
+    {
+        anim.SetTrigger("PJs");
     }
 }
