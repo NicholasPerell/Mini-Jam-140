@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25fe10e8b66e7e94eabafbc52f4950a7, type: 3}
-  m_Name: Test25
+  m_Name: NewLevelData
   m_EditorClassIdentifier: 
   data:
     walls: []
-    playerPosition: {x: 1, y: 0}
-    playerDirectionFacing: 1
-    coins: 2
+    playerPosition: {x: 0, y: 0}
+    playerDirectionFacing: 0
+    coins: 0
     pillars: []
     enemies: []
     coinPath: []
     pillarsWrapped: 
-  loadingImage: {fileID: 2800000, guid: 088a37270976dc44798c7d39dc7576de, type: 3}
+  loadingImage: {fileID: 0}
