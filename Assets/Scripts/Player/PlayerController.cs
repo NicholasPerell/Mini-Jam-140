@@ -19,14 +19,13 @@ public class PlayerController : TurnEntityController
     float playerMoveDuration = .5f;
     [SerializeField]
     float playerJumpPower = .5f;
-    [SerializeField] 
-    CoinGrid CoinMarker;
     [SerializeField]
     GameObject deathIndicatorChild;
     [SerializeField]
+    GameObject coinChild;
+    [SerializeField]
     [Min(1)]
     int distanceCanThrowCoin = 3;
-    [SerializeField]
     int coinCount = 0;
 
     bool isTakingInput;
@@ -52,6 +51,8 @@ public class PlayerController : TurnEntityController
         isTakingInput = true;
         inputState = PlayerInputState.MOVEMENT;
         Array.Sort(currentLevelData.walls, new PositionComparer());
+        coinChild.SetActive(false);
+        coinChild.transform.localPosition = Vector3.zero;
 
         Debug.Log("Player Begin Turn");
     }

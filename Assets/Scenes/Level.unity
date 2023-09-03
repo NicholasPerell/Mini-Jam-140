@@ -1398,23 +1398,17 @@ MonoBehaviour:
   player: {fileID: 764650124}
   scarfLine: {fileID: 132448131}
   tilemap: {fileID: 1722695086}
-  floorTiles:
-  - {fileID: 11400000, guid: fb9a3151c72a7b14bbc15c5a3cde9b73, type: 2}
-  - {fileID: 11400000, guid: dfdf60b3f32d90348b56c3528356a097, type: 2}
-  - {fileID: 11400000, guid: f91a112d101f9d54d84a88733a646a22, type: 2}
-  - {fileID: 11400000, guid: 854226e7aa6f691479aeccdd4aac0d9d, type: 2}
-  - {fileID: 11400000, guid: 82f9b9aa707d24b41bd3cad6fa64e5f6, type: 2}
+  floorTileA: {fileID: 11400000, guid: be0d86f34c1228345b411ea2380a421a, type: 2}
+  floorTileB: {fileID: 11400000, guid: bcc57d7b3e624314f8a7a9991f96548c, type: 2}
   wallTiles:
-  - {fileID: 11400000, guid: b142eb9f6cfa2754e8ae5a6c07aab497, type: 2}
-  - {fileID: 11400000, guid: 21858e890127e4844bbb148267274ece, type: 2}
-  - {fileID: 11400000, guid: 11621978d03b4fd48baf5f73766c41ab, type: 2}
-  - {fileID: 11400000, guid: 3e8d1316dd4250e44856a44d90b35e5d, type: 2}
+  - {fileID: 11400000, guid: 93eeae9f55c81a647b85692e8a256e7a, type: 2}
+  - {fileID: 11400000, guid: 2615b5f41e6b17e48b96506a9dce8dd6, type: 2}
+  dropShadowTile: {fileID: 11400000, guid: 0adbaa1588bd64441a1619c2d5f1715e, type: 2}
   coinTile: {fileID: 11400000, guid: e8877efbdac93844485972d40d4d3d74, type: 2}
   pillarTile: {fileID: 11400000, guid: c6aee4d4bcb590448a03e089fb6df36d, type: 2}
   enemyTile: {fileID: 11400000, guid: 1e4f799e95b77bb4ba739a2b66a8d254, type: 2}
   normalSelectionTile: {fileID: 11400000, guid: da52de210eae42241a17618ab5d228d4, type: 2}
   cornerSelectionTile: {fileID: 11400000, guid: b88fe055ff8063d4cbfabe48130329b9, type: 2}
-  checkerFloorTint: 0.75
 --- !u!4 &1310810372
 Transform:
   m_ObjectHideFlags: 0
@@ -2923,7 +2917,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levels:
-  - {fileID: 11400000, guid: 4117bae6cf0c0934b9c7557068c904ed, type: 2}
+  - {fileID: 11400000, guid: 6da0b68a4c912ef4684fc3589cddd4b9, type: 2}
   - {fileID: 11400000, guid: f5faaae1370f5294fac3e9b028276130, type: 2}
   - {fileID: 11400000, guid: 4117bae6cf0c0934b9c7557068c904ed, type: 2}
   player: {fileID: 764650124}
@@ -3466,6 +3460,10 @@ PrefabInstance:
     - target: {fileID: 8616601342774192975, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}
       propertyPath: whatStopsMovement.m_Bits
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 9201648957962768873, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}

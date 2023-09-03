@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -89,6 +90,11 @@ public class LevelDataObject : ScriptableObject
 {
     [SerializeField]
     LevelData data;
+    [Space]
+    [Space]
+    [SerializeField]
+    Texture2D loadingImage;
+
     public LevelData Data
     {
         get
@@ -103,4 +109,44 @@ public class LevelDataObject : ScriptableObject
         created.data = _data;
         return created;
     }
+
+#if UNITY_EDITOR
+    public void LoadFromImage()
+    {
+        if(loadingImage)
+        {
+            List<Vector2Int> walls = new List<Vector2Int>();
+
+            Color32 wallColor = new Color32(0, 0, 0, 255);
+            Color32 playerSpawnColor = new Color32(0, 255, 0, 255);
+
+            Color32 colorFound;
+            Color32[] all = loadingImage.GetPixels32();
+            Vector2Int currentPosition;
+            for (int i = 0; i < loadingImage.width; i++)
+            {
+                for (int j = 0; j < loadingImage.height; j++)
+                {
+                    colorFound = all[i + j * loadingImage.width];
+                    currentPosition = new Vector2Int(i, j);
+                    if (Match(colorFound, wallColor))
+                    {
+                        walls.Add(currentPosition);
+                    }
+                    else if(Match(colorFound, playerSpawnColor))
+                    {
+                        data.playerPosition = currentPosition;
+                    }
+                }
+            }
+            data.walls = walls.ToArray();
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+    }
+
+    private bool Match(Color32 a, Color32 b)
+    {
+        return a.r == b.r && a.g == b.g && a.b == b.b && a.a == b.a;
+    }
+#endif
 }

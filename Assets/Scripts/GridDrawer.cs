@@ -8,6 +8,10 @@ using System;
 
 public class GridDrawer : MonoBehaviour
 {
+    const int DROP_SHADOW_LAYER = 1;
+    const int HIGHLIGHT_LAYER = 2;
+    const int SELECTION_LAYER = 3;
+
     [SerializeField]
     TurnManager turnManager;
     [SerializeField]
@@ -20,16 +24,15 @@ public class GridDrawer : MonoBehaviour
     [SerializeField]
     Tilemap tilemap;
     [SerializeField]
-    Tile[] floorTiles;
+    Tile floorTileA, floorTileB;
     [SerializeField]
     Tile[] wallTiles;
+    [SerializeField]
+    Tile dropShadowTile;
     [SerializeField]
     Tile coinTile, pillarTile, enemyTile;
     [SerializeField]
     AnimatedTile normalSelectionTile, cornerSelectionTile;
-    [SerializeField]
-    [Range(.5f, 1f)]
-    float checkerFloorTint = .5f;
 
     //Input
     private AnimatedTile selectionTile;
@@ -67,13 +70,24 @@ public class GridDrawer : MonoBehaviour
     {
         tilemap.ClearAllTiles();
 
-        foreach(Vector2Int cellPosition in levelData.walls)
+        Array.Sort(levelData.walls, new PositionComparer());
+
+        Vector2Int cellPosition;
+        for (int i = levelData.walls.Length - 1; i >= 0; i--)
         {
-            int index = cellPosition.x % 2 + cellPosition.y % 2 * 2;
+            cellPosition = levelData.walls[i];
+            int index = UnityEngine.Random.Range(0,wallTiles.Length);
             tilemap.SetTile(new Vector3Int(cellPosition.x,cellPosition.y), wallTiles[index]);
+
+            if(i < levelData.walls.Length - 1
+                && levelData.walls[i+1].x == cellPosition.x
+                && levelData.walls[i+1].y != cellPosition.y + 1)
+            {
+                tilemap.SetTile(new Vector3Int(cellPosition.x, cellPosition.y, DROP_SHADOW_LAYER), dropShadowTile);
+            }
         }
 
-        tilemap.FloodFill(new Vector3Int(levelData.playerPosition.x, levelData.playerPosition.y), floorTiles[0]);
+        tilemap.FloodFill(new Vector3Int(levelData.playerPosition.x, levelData.playerPosition.y), floorTileA);
         CheckerFloorTiles();
         pillars = levelData.pillars;
         pillarWrapOrder = new int[0];
@@ -92,14 +106,10 @@ public class GridDrawer : MonoBehaviour
                                                     i / bounds.size.x % bounds.size.y, 
                                                     i / bounds.size.x / bounds.size.y % bounds.size.z);
             tileBase = tilemap.GetTile(position);
-            foreach(Tile floorTile in floorTiles)
+            if (floorTileA == tileBase)
             {
-                if(floorTile == tileBase)
-                {
-                    bool isEven = (position.x + position.y) % 2 == 0;
-                    ((Tile)tileBase).color = isEven ? Color.white : new Color(checkerFloorTint, checkerFloorTint, checkerFloorTint);
-                    tilemap.RefreshTile(position);
-                }
+                tilemap.SetTile(position, position.x % 2 == position.y % 2 ? floorTileA : floorTileB);
+                tilemap.RefreshTile(position);
             }
         }
     }
@@ -120,7 +130,7 @@ public class GridDrawer : MonoBehaviour
 
             if (positionHighlighted != oldPositionHighlighted)
             {
-                tilemap.SetTile(new Vector3Int(oldPositionHighlighted.x, oldPositionHighlighted.y, 2), null);
+                tilemap.SetTile(new Vector3Int(oldPositionHighlighted.x, oldPositionHighlighted.y, SELECTION_LAYER), null);
             }
 
             bool overSelection = false;
@@ -135,7 +145,7 @@ public class GridDrawer : MonoBehaviour
 
             if (overSelection)
             {
-                tilemap.SetTile(new Vector3Int(positionHighlighted.x, positionHighlighted.y, 2), selectionTile);
+                tilemap.SetTile(new Vector3Int(positionHighlighted.x, positionHighlighted.y, SELECTION_LAYER), selectionTile);
                 if (Input.GetMouseButtonDown(0))
                 {
                     ReturnInput(positionHighlighted);
@@ -147,8 +157,8 @@ public class GridDrawer : MonoBehaviour
     private void Player_OnScarfDismissed()
     {
         ReturnInput = null;
-        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward);
-        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * 2);
+        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * HIGHLIGHT_LAYER);
+        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * SELECTION_LAYER);
     }
 
     private void Player_OnScarfConsidered(Vector2Int[] pillarsInRange, UnityAction<Vector2Int> InputCallback)
@@ -158,7 +168,7 @@ public class GridDrawer : MonoBehaviour
         selectionTileOffset = Vector3.one * .5f;
         foreach (Vector2Int pillar in pillarsInRange)
         {
-            tilemap.SetTile(new Vector3Int(pillar.x, pillar.y, 1), pillarTile);
+            tilemap.SetTile(new Vector3Int(pillar.x, pillar.y, HIGHLIGHT_LAYER), pillarTile);
         }
         possiblePositions = pillarsInRange;
     }
@@ -166,8 +176,8 @@ public class GridDrawer : MonoBehaviour
     private void Player_OnCoinsDismissed()
     {
         ReturnInput = null;
-        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward);
-        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * 2);
+        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * HIGHLIGHT_LAYER);
+        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * SELECTION_LAYER);
     }
 
     private void Player_OnCoinsConsidered(Vector2Int[] tossableTiles, UnityAction<Vector2Int> InputCallback)
@@ -177,7 +187,7 @@ public class GridDrawer : MonoBehaviour
         selectionTileOffset = Vector3.zero;
         foreach (Vector2Int tossTo in tossableTiles)
         {
-            tilemap.SetTile(new Vector3Int(tossTo.x, tossTo.y, 1), coinTile);
+            tilemap.SetTile(new Vector3Int(tossTo.x, tossTo.y, HIGHLIGHT_LAYER), coinTile);
         }
         possiblePositions = tossableTiles;
     }

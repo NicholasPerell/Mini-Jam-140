@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: CornerSelectionTile
   m_EditorClassIdentifier: 
   m_AnimatedSprites:
-  - {fileID: 1923304325, guid: 0cce58e470553bd41aa53c95ed0fee57, type: 3}
-  - {fileID: 997652188, guid: 0cce58e470553bd41aa53c95ed0fee57, type: 3}
-  - {fileID: -506544610, guid: 0cce58e470553bd41aa53c95ed0fee57, type: 3}
-  - {fileID: -951951077, guid: 0cce58e470553bd41aa53c95ed0fee57, type: 3}
+  - {fileID: 765744960, guid: c4a9f4a58e8de4e4fa91d1b8b6f68113, type: 3}
+  - {fileID: 750725975, guid: c4a9f4a58e8de4e4fa91d1b8b6f68113, type: 3}
+  - {fileID: -1266120395, guid: c4a9f4a58e8de4e4fa91d1b8b6f68113, type: 3}
+  - {fileID: 1158920752, guid: c4a9f4a58e8de4e4fa91d1b8b6f68113, type: 3}
   m_MinSpeed: 4
   m_MaxSpeed: 4
   m_AnimationStartTime: 0
