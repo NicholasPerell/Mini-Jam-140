@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25fe10e8b66e7e94eabafbc52f4950a7, type: 3}
-  m_Name: Test2
+  m_Name: Level1
   m_EditorClassIdentifier: 
   data:
     walls:
@@ -42,18 +42,17 @@ MonoBehaviour:
     - {x: 6, y: 4}
     - {x: 6, y: 5}
     - {x: 6, y: 6}
-    playerPosition: {x: 1, y: 4}
+    playerPosition: {x: 1, y: 2}
     playerDirectionFacing: 3
     coins: 2
     pillars:
     - {x: 1, y: 1}
     - {x: 1, y: 4}
     - {x: 3, y: 4}
-    - {x: 4, y: 4}
     enemies:
     - type: 0
-      position: {x: 4, y: 1}
-      directionFacing: 0
+      position: {x: 4, y: 5}
+      directionFacing: 3
       enemyAction: 0
     coinPath: []
     pillarsWrapped: 
