@@ -341,7 +341,13 @@ MonoBehaviour:
   dialogueLines:
   - Easy peasy lemon squeezy.
   - That was very dangerous.
-  - CHESSMATE! Hold On...
+  - CHESSMATE! Hold on...
+  - I wonder where they go.
+  - My trusty scarf saves me again.
+  - Yes, very tactical.
+  - I'm getting the hang of this.
+  - YIPPIE! Another down.
+  - One less monster in the closet.
 --- !u!4 &543933251
 Transform:
   m_ObjectHideFlags: 0
