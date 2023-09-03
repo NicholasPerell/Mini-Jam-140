@@ -7,6 +7,13 @@ using DG.Tweening;
 
 public class PlayerController : TurnEntityController
 {
+    public enum PlayerInputState
+    {
+        MOVEMENT,
+        COIN,
+        SCARF
+    }
+
     [SerializeField]
     [Min(float.Epsilon)]
     float playerMoveDuration = .5f;
@@ -16,15 +23,26 @@ public class PlayerController : TurnEntityController
     CoinGrid CoinMarker;
     [SerializeField]
     GameObject deathIndicatorChild;
-
+    [SerializeField]
+    [Min(1)]
+    int distanceCanThrowCoin = 3;
+    [SerializeField]
     int coinCount = 0;
-    bool coinTossSelection = false;
+
+    bool isTakingInput;
+    [SerializeField]
+    PlayerInputState inputState = PlayerInputState.MOVEMENT;
 
     Vector2Int finishingPosition;
     DirectionFacing finishingFacing;
-    bool isTakingInput = false;
-
+    
     public event UnityAction<int, UnityAction> OnStealthKillEnemy;
+    public event UnityAction<Vector2Int[], UnityAction<Vector2Int>> OnCoinsConsidered;
+    public event UnityAction<Vector2Int[]> OnCoinsUpdated;
+    public event UnityAction OnCoinsDismissed;
+    public event UnityAction<Vector2Int[], List<int>, UnityAction<Vector2Int>> OnScarfConsidered;
+    public event UnityAction<List<int>> OnScarfUpdated;
+    public event UnityAction OnScarfDismissed;
 
     public override void BeginTurn(LevelData levelData)
     {
@@ -32,24 +50,35 @@ public class PlayerController : TurnEntityController
         currentLevelData = levelData;
         coinCount = currentLevelData.coins;
         isTakingInput = true;
+        inputState = PlayerInputState.MOVEMENT;
+        Array.Sort(currentLevelData.walls, new PositionComparer());
 
         Debug.Log("Player Begin Turn");
-
     }
 
     void Update()
+    {
+        CheckForInput();
+    }
+
+    void CheckForInput()
     {
         if (IsEntityTurn && isTakingInput)
         {
             if (coinCount > 0)
             {
                 if (Input.GetKeyDown(KeyCode.E))
-                { 
-                    CoinMarker.CreateGrid(currentLevelData);
+                {
+                    CheckForNonMovementInput(PlayerInputState.COIN);
                 }
             }
 
-            if(!coinTossSelection)
+            if(Input.GetKeyDown(KeyCode.Q))
+            {
+                CheckForNonMovementInput(PlayerInputState.SCARF);
+            }
+
+            if (inputState == PlayerInputState.MOVEMENT)
             {
                 CheckForMovementInput();
             }
@@ -58,22 +87,131 @@ public class PlayerController : TurnEntityController
 
     void CheckForMovementInput()
     {
+        DirectionFacing inputFacing = DirectionFacing.RIGHT;
+        bool GetKeyDown = false;
         if (Input.GetKeyDown(KeyCode.W))
         {
-            AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.UP, currentLevelData.enemies, currentLevelData.walls);
+            inputFacing = DirectionFacing.UP;
+            GetKeyDown = true;
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.DOWN, currentLevelData.enemies, currentLevelData.walls);
+            inputFacing = DirectionFacing.DOWN;
+            GetKeyDown = true;
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.RIGHT, currentLevelData.enemies, currentLevelData.walls);
+            inputFacing = DirectionFacing.RIGHT;
+            GetKeyDown = true;
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            AttemptMoveOne(currentLevelData.playerPosition, DirectionFacing.LEFT, currentLevelData.enemies, currentLevelData.walls);
+            inputFacing = DirectionFacing.LEFT;
+            GetKeyDown = true;
         }
+
+        if (GetKeyDown)
+        {
+            if (inputFacing == currentLevelData.playerDirectionFacing)
+            {
+                AttemptMoveOne(currentLevelData.playerPosition, inputFacing, currentLevelData.enemies, currentLevelData.walls);
+            }
+            else
+            {
+                SetFacing(inputFacing);
+                currentLevelData.playerDirectionFacing = inputFacing;
+            }
+        }
+    }
+
+    void CheckForNonMovementInput(PlayerInputState desiredInputState)
+    {
+        PlayerInputState previousInputState = inputState;
+        bool toggleOn = desiredInputState != inputState;
+        if (toggleOn)
+        {
+            inputState = desiredInputState;
+        }
+        else
+        {
+            inputState = PlayerInputState.MOVEMENT;
+        }
+
+        switch (previousInputState)
+        {
+            case PlayerInputState.COIN:
+                OnCoinsDismissed?.Invoke();
+                break;
+            case PlayerInputState.SCARF:
+                OnScarfDismissed?.Invoke();
+                break;
+        }
+
+        switch (inputState)
+        {
+            case PlayerInputState.COIN:
+                OnCoinsConsidered?.Invoke(FindCoinTossableSpaces(), ThrowCoin);
+                break;
+            case PlayerInputState.SCARF:
+                OnScarfConsidered?.Invoke(currentLevelData.pillars, currentLevelData.pillarsWrapped, TieScarf);
+                break;
+        }
+    }
+
+    void ThrowCoin(Vector2Int position)
+    {
+        List<Vector2Int> coinPath = new List<Vector2Int>();
+
+        Vector2Int backwards = TurnBehindToVector(currentLevelData.playerDirectionFacing);
+
+        for(Vector2Int tile = position; tile != currentLevelData.playerPosition; tile += backwards)
+        {
+            coinPath.Add(tile);
+        }
+
+        OnCoinsUpdated?.Invoke(coinPath.ToArray());
+        OnCoinsDismissed?.Invoke();
+        DeclareTurnOver(currentLevelData.playerPosition, currentLevelData.playerDirectionFacing);
+    }
+
+    void TieScarf(Vector2Int position)
+    {
+        List<int> pillarsWrapped = currentLevelData.pillarsWrapped;
+        OnScarfUpdated?.Invoke(pillarsWrapped);
+        OnScarfDismissed?.Invoke();
+        DeclareTurnOver(currentLevelData.playerPosition, currentLevelData.playerDirectionFacing);
+    }
+
+    Vector2Int[] FindCoinTossableSpaces()
+    {
+        PositionComparer positionComparer = new PositionComparer();
+        List<Vector2Int> tossablePositions = new List<Vector2Int>();
+        Vector2Int playerPosition = currentLevelData.playerPosition;
+        Vector2Int towards = TurnFacingToVector(currentLevelData.playerDirectionFacing);
+
+        Vector2Int[] enemyPositions = new Vector2Int[currentLevelData.enemies.Length];
+        for(int i = 0; i < enemyPositions.Length; i++)
+        {
+            enemyPositions[i] = currentLevelData.enemies[i].position;
+        }
+        Array.Sort(enemyPositions, positionComparer);
+
+        Vector2Int pathTo = playerPosition;
+        for(int i = 0; i < distanceCanThrowCoin; i++)
+        {
+            pathTo += towards;
+            if(Array.BinarySearch(currentLevelData.walls, pathTo, positionComparer) > -1)
+            {
+                break;
+            }
+            else if (Array.BinarySearch(enemyPositions, pathTo, positionComparer) < 0)
+            {
+                tossablePositions.Add(pathTo);
+            }
+        }
+
+        tossablePositions.Sort(positionComparer);
+        return tossablePositions.ToArray();
     }
 
     bool AttemptMoveOne(Vector2Int player, DirectionFacing facing, LevelData.EnemyData[] enemies, Vector2Int[] walls)
@@ -81,7 +219,6 @@ public class PlayerController : TurnEntityController
         bool success = true;
         int behindEnemy = -1;
 
-        Array.Sort(walls, new PositionComparer());
         Debug.Log(player);
         Vector2Int requested = player + TurnFacingToVector(facing);
         Debug.Log(requested);

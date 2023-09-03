@@ -243,8 +243,10 @@ MonoBehaviour:
   - {fileID: -144399151, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
   - {fileID: -145598450, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
   tilemap: {fileID: 0}
-  isEntityTurn: 0
   playerMoveDuration: 0.5
   playerJumpPower: 0.1
   CoinMarker: {fileID: 0}
   deathIndicatorChild: {fileID: 8312479519743591123}
+  distanceCanThrowCoin: 3
+  coinCount: 1
+  inputState: 0
