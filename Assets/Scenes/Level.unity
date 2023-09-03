@@ -1654,6 +1654,50 @@ PrefabInstance:
       propertyPath: tilemap
       value: 
       objectReference: {fileID: 1722695086}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 4117bae6cf0c0934b9c7557068c904ed, type: 2}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 6da0b68a4c912ef4684fc3589cddd4b9, type: 2}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: f321a29c440fe3f4386126b94ce61c97, type: 2}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: ec79d39420ed42d4da65904f7a815b12, type: 2}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: ac6326ae9717045498eca4d1ab8ce8a0, type: 2}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: cd148c8289bcb5e45ad2a1e2cafce307, type: 2}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[7]
+      value: 
+      objectReference: {fileID: 11400000, guid: eac8a69d04b30c046a0c7d016018fd4c, type: 2}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[8]
+      value: 
+      objectReference: {fileID: 11400000, guid: 119a0025303fbb946955eb219ad2c29b, type: 2}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[9]
+      value: 
+      objectReference: {fileID: 11400000, guid: 4e4ffc1bda4026f4d94ed7d64acebe65, type: 2}
+    - target: {fileID: 3911192615242542090, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
+      propertyPath: levels.Array.data[10]
+      value: 
+      objectReference: {fileID: 11400000, guid: ef00a05bd7c4df7419bea8c914eff4fc, type: 2}
     - target: {fileID: 3911192615242542091, guid: ac25ef8256609c54ca6b53cc8af9fcac, type: 3}
       propertyPath: m_RootOrder
       value: 4

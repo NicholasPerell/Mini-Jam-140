@@ -56,3 +56,4 @@ MonoBehaviour:
       enemyAction: 0
     coinPath: []
     pillarsWrapped: 
+  loadingImage: {fileID: 0}
