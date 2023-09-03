@@ -3318,10 +3318,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1722695086}
     - target: {fileID: 8616601342774192975, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}
-      propertyPath: coinCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8616601342774192975, guid: 051a0dc03d6a67a43b991708819fcf0a, type: 3}
       propertyPath: movePoint
       value: 
       objectReference: {fileID: 1337946346}

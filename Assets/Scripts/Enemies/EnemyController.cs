@@ -132,7 +132,7 @@ public abstract class EnemyController : TurnEntityController
             return false;
         }
 
-        Vector2Int[] tiles = GetAttackVisionTiles(enemy, facing, walls);
+        Vector2Int[] tiles = gather(enemy, facing, walls);
         Array.Sort(tiles, new PositionComparer());
         foreach (Vector2Int target in targets)
         {

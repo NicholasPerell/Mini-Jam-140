@@ -42,8 +42,8 @@ MonoBehaviour:
     - {x: 6, y: 4}
     - {x: 6, y: 5}
     - {x: 6, y: 6}
-    playerPosition: {x: 1, y: 1}
-    playerDirectionFacing: 2
+    playerPosition: {x: 1, y: 2}
+    playerDirectionFacing: 3
     coins: 2
     pillars:
     - {x: 1, y: 1}
@@ -51,7 +51,7 @@ MonoBehaviour:
     - {x: 3, y: 4}
     enemies:
     - type: 0
-      position: {x: 4, y: 3}
+      position: {x: 4, y: 5}
       directionFacing: 3
       enemyAction: 0
     coinPath: []
