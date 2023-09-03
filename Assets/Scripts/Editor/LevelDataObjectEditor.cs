@@ -4,14 +4,18 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(LevelBuildTool))]
-public class LevelDataObjectEditor : Editor
+public class LevelBuildToolEditor : Editor
 {
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
-        if(GUILayout.Button("Load To Data"))
+        if(GUILayout.Button("Save To Data"))
         {
             ((LevelBuildTool)target).Save();
+        }
+        if (GUILayout.Button("Load From Data"))
+        {
+            ((LevelBuildTool)target).Load();
         }
     }
 }

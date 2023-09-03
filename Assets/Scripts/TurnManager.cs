@@ -41,6 +41,13 @@ public class TurnManager : MonoBehaviour
 
     public event UnityAction<LevelData> OnInitializeLevel;
 
+#if UNITY_EDITOR
+    public void SetLevel(LevelDataObject toTest)
+    {
+        levels = new LevelDataObject[] { toTest };
+    }
+#endif
+
     private void Start()
     {
         enemies = new List<EnemyController>();

@@ -33,18 +33,22 @@ public class LevelSpawnIndicator : MonoBehaviour
     [SerializeField]
     Sprite[] directionSprites;
 
-    private void OnValidate()
+    public void UpdateVisuals()
     {
         typeVisual.sprite = typeSprites[(int)type];
         facingVisual.sprite = (type != Type.PILLAR && type != Type.PJ) ? directionSprites[(int)facing] : null;
         facingVisual.transform.right = (type == Type.BISHOP) ? new Vector3(1, 1) : Vector3.right;
 
         Tilemap tilemap = GameObject.FindAnyObjectByType<Tilemap>();
-        if(tilemap)
+        if (tilemap)
         {
-            Debug.Log(transform.position);
-            transform.position = tilemap.CellToWorld(tilemap.WorldToCell(transform.position)) + new Vector3(.5f,.5f);
+            transform.position = tilemap.CellToWorld(tilemap.WorldToCell(transform.position)) + new Vector3(.5f, .5f);
         }
+    }
+
+    private void OnValidate()
+    {
+        UpdateVisuals();
     }
 
     private void OnDrawGizmosSelected()

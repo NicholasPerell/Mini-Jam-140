@@ -87,6 +87,11 @@ public class GridDrawer : MonoBehaviour
             }
         }
 
+        Vector3Int cellCenter = new Vector3Int(tilemap.cellBounds.size.x / 2, tilemap.cellBounds.size.y / 2);
+        Vector3 worldCenter = tilemap.CellToWorld(cellCenter) + Vector3.one * .5f;
+        worldCenter.z = Camera.main.transform.position.z;
+        Camera.main.transform.position = worldCenter;
+
         tilemap.FloodFill(new Vector3Int(levelData.playerPosition.x, levelData.playerPosition.y), floorTileA);
         CheckerFloorTiles();
         pillars = levelData.pillars;
