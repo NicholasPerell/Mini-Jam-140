@@ -21,6 +21,9 @@ public class AudioSystem : MonoBehaviour
     }
     SortedDictionary<string, AudioClip> audioResources;
     List<AudioClip> sfxPlaying;
+    List<AudioSource> sourcesPlaying;
+
+    float volume = .5f;
 
     private void Awake()
     {
@@ -33,12 +36,25 @@ public class AudioSystem : MonoBehaviour
             instance = this;
             audioResources = new SortedDictionary<string, AudioClip>();
             sfxPlaying = new List<AudioClip>();
+            sourcesPlaying = new List<AudioSource>();
             for(int i = 0; i < resources.Length; i++)
             {
                 audioResources.Add(resources[i].name, resources[i]);
             }
             transform.parent = null;
             DontDestroyOnLoad(this.gameObject);
+        }
+    }
+
+    private void Start()
+    {
+        if (PlayerPrefs.HasKey(AudioChannel.SFX.ToString() + " Volume"))
+        {
+            volume = PlayerPrefs.GetFloat(AudioChannel.SFX.ToString() + " Volume");
+        }
+        else
+        {
+            PlayerPrefs.SetFloat(AudioChannel.SFX.ToString() + " Volume", 0.5f);
         }
     }
 
@@ -87,7 +103,9 @@ public class AudioSystem : MonoBehaviour
         AudioSource sfxChild = Instantiate(sfxChildPrefab, transform).GetComponent<AudioSource>();
         sfxChild.clip = clip;
         sfxChild.Play();
+        sourcesPlaying.Add(sfxChild);
         yield return new WaitForSeconds(length);
+        sourcesPlaying.Remove(sfxChild);
         Destroy(sfxChild.gameObject);
         sfxPlaying.Remove(clip);
     }
@@ -106,5 +124,31 @@ public class AudioSystem : MonoBehaviour
         {
             audio.UnPause();
         }
+    }
+
+    private void OnEnable()
+    {
+        AudioVolumeSlider.OnVolumeChange += AudioVolumeSlider_OnVolumeChange;
+    }
+
+    private void AudioVolumeSlider_OnVolumeChange(AudioChannel arg0, float arg1)
+    {
+        if (arg0 == AudioChannel.SFX)
+        {
+            volume = arg1;
+            foreach (AudioSource source in sourcesPlaying)
+            {
+                if (source != null)
+                {
+                    source.volume = arg1;
+                }
+            }
+            RequestSound("CoinThrow01");
+        }
+    }
+
+    private void OnDisable()
+    {
+        AudioVolumeSlider.OnVolumeChange -= AudioVolumeSlider_OnVolumeChange;
     }
 }
