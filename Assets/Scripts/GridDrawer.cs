@@ -93,6 +93,18 @@ public class GridDrawer : MonoBehaviour
 
         tilemap.FloodFill(new Vector3Int(levelData.playerPosition.x, levelData.playerPosition.y), floorTileA);
         CheckerFloorTiles();
+        tilemap.FloodFill(new Vector3Int(-1,-6), wallTiles[0]);
+        for (int i = cellCenter.x - 12; i <= cellCenter.x + 12; i++)
+        {
+            for (int j = cellCenter.x - 8; j <= cellCenter.x + 8; j++)
+            {
+                int index = UnityEngine.Random.Range(0, wallTiles.Length);
+                if (!tilemap.HasTile(new Vector3Int(i, j)))
+                {
+                    tilemap.SetTile(new Vector3Int(i, j), wallTiles[index]);
+                }
+            }
+        }
         pillars = levelData.pillars;
         pillarWrapOrder = new int[0];
     }
@@ -160,9 +172,7 @@ public class GridDrawer : MonoBehaviour
 
     private void Player_OnScarfDismissed()
     {
-        ReturnInput = null;
-        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * HIGHLIGHT_LAYER);
-        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * SELECTION_LAYER);
+        ClearOutHighlights();
     }
 
     private void Player_OnScarfConsidered(Vector2Int[] pillarsInRange, UnityAction<Vector2Int> InputCallback)
@@ -179,9 +189,14 @@ public class GridDrawer : MonoBehaviour
 
     private void Player_OnCoinsDismissed()
     {
+        ClearOutHighlights();
+    }
+
+    private void ClearOutHighlights()
+    {
         ReturnInput = null;
-        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * HIGHLIGHT_LAYER);
-        tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * SELECTION_LAYER);
+        //tilemap.DeleteCells(Vector3Int.forward, Vector3Int.forward * HIGHLIGHT_LAYER);
+        tilemap.DeleteCells(Vector3Int.forward * HIGHLIGHT_LAYER, Vector3Int.forward * SELECTION_LAYER);
     }
 
     private void Player_OnCoinsConsidered(Vector2Int[] tossableTiles, UnityAction<Vector2Int> InputCallback)
