@@ -879,6 +879,24 @@ MonoBehaviour:
   - '`And I have my trusty scarf and lucky coins, so everything should be fine.`'
   - '*exhales*'
   - "`Alrighty. Let\u2019s roll!`"
+  - '[Welcome to Wardrobe Warrior]'
+  - '[Your goal is to defeat all enemies on the screen]'
+  - '[You defeat an enemy by walking into them from behind]'
+  - '[Enemies can also be defeated by tripping over your scarf]'
+  - '[Hit Q when next to a pillar to toggle scarf placement]'
+  - '[Enemies can be lured by your coins]'
+  - '[Hit E to activate your coin HUD]'
+  - '[If you do this while facing a wall no HUD will appear but game will still act
+    as so]'
+  - '[Just tap E again if the game freezes in this way]'
+  - '[In both HUDs click on the selectable to active the tool]'
+  - '[Enemies will charge at you if you are in there line of sight]'
+  - '[Enemies will also charge at coins thrown in their line of sight]'
+  - '[and turn to coins thrown in the squares adjacent to them]'
+  - '[They will also be alerted if you step in the tiles adjacent to them but not
+    behind them]'
+  - '[If you get stuck, hit ESC to restart the level]'
+  - '[Good luck and have fun]'
 --- !u!1 &2088328584
 GameObject:
   m_ObjectHideFlags: 0
