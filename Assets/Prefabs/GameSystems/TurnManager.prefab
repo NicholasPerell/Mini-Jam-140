@@ -445,6 +445,9 @@ MonoBehaviour:
   player: {fileID: 0}
   tilemap: {fileID: 0}
   rookPrefab: {fileID: 8507859843769742429, guid: 07de3b91edb76f94c9465ca1098b7d8a, type: 3}
+  knightPrefab: {fileID: 8507859843769742429, guid: 07de3b91edb76f94c9465ca1098b7d8a, type: 3}
+  bishopPrefab: {fileID: 8507859843769742429, guid: 07de3b91edb76f94c9465ca1098b7d8a, type: 3}
+  pajamaPrefab: {fileID: 6876293547553201648, guid: ee52bafff84e88b40a66b30c9c6a097a, type: 3}
   pillarPrefab: {fileID: 4115832215194210142, guid: 4312c3af8fc22c448965a0e0e9c05573, type: 3}
   blackScreen: {fileID: 3911192615119189728}
   swipeScreenTime: 1

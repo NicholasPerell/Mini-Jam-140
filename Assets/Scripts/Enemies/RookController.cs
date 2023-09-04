@@ -118,7 +118,9 @@ public class RookController : EnemyController
             tripsOverScarf = CrossesScarf(path, path + towards, pillars, pillarIndex, player);
             playerFound = path + towards == currentLevelData.playerPosition;
 
-            if (playerFound
+            if (
+                tripsOverScarf
+                || playerFound
                 || Array.BinarySearch(otherEnemies, path + towards, new PositionComparer()) > -1
                 || Array.BinarySearch(walls, path + towards, new PositionComparer()) > -1
                 || (path.x == position.x && !alignedHorizontally) 

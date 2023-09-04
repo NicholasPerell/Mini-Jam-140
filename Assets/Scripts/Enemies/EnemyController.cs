@@ -198,8 +198,13 @@ public abstract class EnemyController : TurnEntityController
         }
     }
 
+    StringBuilder debugMessanger = new StringBuilder();
     protected bool CrossesScarf(Vector2Int positionFrom, Vector2Int positionTo, Vector2Int[] pillars, int[] pillarIndex, Vector2Int player)
     {
+        debugMessanger.Clear();
+        debugMessanger.Append(gameObject.name).Append(" CrossesScarf\n")
+            .Append(positionFrom).Append("->").Append(positionTo).Append("\n");
+
         bool crosses = false;
         if (pillarIndex.Length > 0)
         {
@@ -211,12 +216,15 @@ public abstract class EnemyController : TurnEntityController
                     break;
                 }
             }
-            if(!crosses && positionTo != player)
+            debugMessanger.Append("crosses: ").Append(crosses ? "TRUE" : "FALSE");
+            if (!crosses && positionTo != player)
             {
                 crosses = LineSegmentsTrippable(positionFrom, positionTo, pillars[pillarIndex[pillarIndex.Length - 1]], player);
             }
         }
 
+
+        //Debug.Log(debugMessanger.ToString());
         return crosses;
     }
 

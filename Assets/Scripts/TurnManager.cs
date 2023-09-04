@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class TurnManager : MonoBehaviour
 {
@@ -16,8 +17,10 @@ public class TurnManager : MonoBehaviour
     Tilemap tilemap;
     [Space]
     [Header("Enemy Prefabs")]
-    [SerializeField]
-    GameObject rookPrefab;
+    [SerializeField] GameObject rookPrefab;
+    [SerializeField] GameObject knightPrefab;
+    [SerializeField] GameObject bishopPrefab;
+    [SerializeField] GameObject pajamaPrefab;
     [Space]
     [Header("Environment Objects")]
     [SerializeField]
@@ -109,6 +112,15 @@ public class TurnManager : MonoBehaviour
             {
                 case EnemyType.ROOK:
                     prefab = rookPrefab;
+                    break;
+                case EnemyType.KNIGHT:
+                    prefab = knightPrefab;
+                    break;
+                case EnemyType.BISHOP:
+                    prefab = bishopPrefab;
+                    break;
+                case EnemyType.PJ:
+                    prefab = pajamaPrefab;
                     break;
                 default:
                     prefab = rookPrefab;
@@ -225,7 +237,7 @@ public class TurnManager : MonoBehaviour
     {
         Debug.Log("RespondToPlayerDeathComplete");
         player.OnDeathComplete -= RespondToPlayerDeathComplete;
-        CoverScreen(() => { gameOverPanel.SetActive(true); });
+        CoverScreen(() => { gameOverPanel.SetActive(true); player.SetNormal(); });
     }
 
     private void RespondToEnemyTurnComplete(Vector2Int position, DirectionFacing facing)
@@ -252,6 +264,7 @@ public class TurnManager : MonoBehaviour
     private void HandleWin()
     {
         Debug.Log("WIN");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     private Vector3 ConvertToWorldPos(Vector2Int cellPosition)

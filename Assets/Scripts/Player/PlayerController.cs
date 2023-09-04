@@ -38,6 +38,17 @@ public class PlayerController : TurnEntityController
     [SerializeField]
     Animator anim;
 
+    bool alternatingStep = false;
+    public bool AlternatingStep
+    {
+        get
+        {
+            bool rtn = alternatingStep;
+            alternatingStep = !alternatingStep;
+            return rtn;
+        }
+    }
+
     public event UnityAction<int, UnityAction> OnStealthKillEnemy;
     public event UnityAction<Vector2Int[], UnityAction<Vector2Int>> OnCoinsConsidered;
     public event UnityAction<Vector2Int[]> OnCoinsUpdated;
@@ -341,6 +352,7 @@ public class PlayerController : TurnEntityController
         finishingPosition = cellPosition;
         Vector3 worldPosition = tilemap.transform.position + tilemap.tileAnchor + new Vector3(cellPosition.x * tilemap.cellSize.x, cellPosition.y * tilemap.cellSize.y, 0);
         Debug.Log("MovePlayerTo: " + cellPosition + " -> " + worldPosition);
+        AudioSystem.Instance?.RequestSound(AlternatingStep ? "PlayerJump01" : "PlayerJump02");
         Sequence mySequence = DOTween.Sequence();
         mySequence.Append(transform.DOMove(worldPosition, playerMoveDuration));
         mySequence.Insert(0,visuals.transform.DOLocalJump(Vector3.zero, playerJumpPower, 1, playerMoveDuration));
@@ -381,5 +393,10 @@ public class PlayerController : TurnEntityController
     public void SetPJs()
     {
         anim.SetTrigger("PJs");
+    }
+
+    public void SetNormal()
+    {
+        anim.Play("Normal");
     }
 }

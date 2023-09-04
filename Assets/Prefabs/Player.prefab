@@ -350,7 +350,7 @@ MonoBehaviour:
   - {fileID: -144399151, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
   - {fileID: -145598450, guid: f371753aacf7b564ab2a344f433d40c3, type: 3}
   tilemap: {fileID: 0}
-  playerMoveDuration: 0.5
+  playerMoveDuration: 0.25
   playerJumpPower: 0.1
   deathIndicatorChild: {fileID: 3194651128348504264}
   coinChild: {fileID: 1460510051616883765}
