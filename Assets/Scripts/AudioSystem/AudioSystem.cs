@@ -70,9 +70,13 @@ public class AudioSystem : MonoBehaviour
 
             StartCoroutine(ExpressSoundLifetime(clip));
         }
-        else if(audioResources.TryGetValue(name, out clip))
+        else if(!audioResources.TryGetValue(name, out clip))
         {
             Debug.LogError("Audio System: " + name + " has no matching string.");
+        }
+        else
+        {
+            Debug.LogError("Audio System: " + name + " is already playing.");
         }
     }
 

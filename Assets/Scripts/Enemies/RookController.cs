@@ -73,6 +73,7 @@ public class RookController : EnemyController
         }
         else
         {
+            AudioSystem.Instance?.RequestSound(AlternatingStep ? "EnemyMovement01" : "EnemyMovement02");
             int offset = Vector2.Dot(diff, TurnLeftToVector(facing)) > 0 ? 1 : 3;
             facing = (DirectionFacing)(((int)facing + offset) % 4);
             SetFacing(facing);
@@ -132,6 +133,8 @@ public class RookController : EnemyController
         }
 
         SetFacing(facing);
+
+        AudioSystem.Instance?.RequestSound(AlternatingStep ? "EnemyMovement01" : "EnemyMovement02");
 
         finishingPosition = path;
         finishingFacing = facing;

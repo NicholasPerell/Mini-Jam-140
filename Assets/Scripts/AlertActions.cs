@@ -11,13 +11,17 @@ public class AlertActions : MonoBehaviour
 
     public void EnableAlertIcon(bool show)
     {
+        Debug.Log("Alert");
         alertIcon.SetActive(show);
+        AudioSystem.Instance?.RequestSound("EnemyNoticePlayer01");
         timeWhenDisappear = Time.time + timeToAppear;
     }
 
     public void EnableQuestionIcon(bool show)
     {
+        Debug.Log("Question");
         questionIcon.SetActive(show);
+        AudioSystem.Instance?.RequestSound("EnemyNoticeCoin01");
         timeWhenDisappear = Time.time + timeToAppear;
     }
 

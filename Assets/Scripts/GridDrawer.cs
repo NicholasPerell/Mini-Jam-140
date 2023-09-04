@@ -45,7 +45,6 @@ public class GridDrawer : MonoBehaviour
     private Vector2Int[] pillars;
     private int[] pillarWrapOrder;
 
-
     void OnEnable()
     {
         turnManager.OnInitializeLevel += RespondToInitializeLevel;

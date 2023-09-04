@@ -30,6 +30,17 @@ public abstract class EnemyController : TurnEntityController
     [Tooltip("How many units moved per second")]
     protected float movementSpeed = 1;
 
+    static private bool alternatingStep = false;
+    static protected bool AlternatingStep
+    {
+        get
+        {
+            bool rtn = alternatingStep;
+            alternatingStep = !alternatingStep;
+            return rtn;
+        }
+    }
+
     public event UnityAction OnAttackPlayer;
 
     public void Initialize(Tilemap _tilemap, int _index)
@@ -162,6 +173,7 @@ public abstract class EnemyController : TurnEntityController
 
     private void TurnAround(Vector2Int enemy, DirectionFacing facing)
     {
+        AudioSystem.Instance?.RequestSound(AlternatingStep ? "EnemyMovement01" : "EnemyMovement02");
         facing = (DirectionFacing)(((int)facing + 2) % 4);
         SetFacing(facing);
         DeclareTurnOver(enemy, facing);
