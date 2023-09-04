@@ -222,11 +222,6 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    private void RespondToEnemyTurnResultDeath()
-    {
-        throw new NotImplementedException();
-    }
-
     private void RespondToEnemyAttackPlayer()
     {
         player.OnDeathComplete += RespondToPlayerDeathComplete;
