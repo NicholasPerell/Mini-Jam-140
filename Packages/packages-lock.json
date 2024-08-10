@@ -4,8 +4,7 @@
       "version": "https://github.com/inkle/ink-unity-integration.git#upm",
       "depth": 0,
       "source": "git",
-      "dependencies": {},
-      "hash": "f7a5ed16b93fe2d220d8833a82e0324276cd2d0e"
+      "dependencies": {}
     },
     "com.unity.2d.animation": {
       "version": "7.0.11",
@@ -523,6 +522,13 @@
         "com.unity.modules.jsonserialize": "1.0.0",
         "com.unity.modules.subsystems": "1.0.0"
       }
+    },
+    "com.utilities.buildpipeline": {
+      "version": "1.4.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
     }
   }
 }
